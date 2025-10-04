@@ -1,13 +1,25 @@
+
+'use client';
 import { SidebarProvider, Sidebar, SidebarInset, SidebarHeader, SidebarTrigger, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { Home, Newspaper, Calendar, Clapperboard, PanelLeft } from "lucide-react";
+import { Home, Newspaper, Calendar, Clapperboard } from "lucide-react";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
+  const navLinks = [
+    { href: "/dashboard", label: "Dashboard", icon: Home },
+    { href: "/dashboard/events", label: "Events", icon: Calendar },
+    { href: "/dashboard/penas", label: "Peñas", icon: Clapperboard },
+    { href: "/dashboard/articles", label: "Articles", icon: Newspaper },
+  ];
+
   return (
     <SidebarProvider>
       <Sidebar>
@@ -21,37 +33,27 @@ export default function DashboardLayout({
         </SidebarHeader>
         <SidebarContent>
             <SidebarMenu>
-                <SidebarMenuItem>
-                    <SidebarMenuButton href="/dashboard" isActive={true} tooltip="Dashboard Home">
-                        <Home />
-                        Dashboard
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-                 <SidebarMenuItem>
-                    <SidebarMenuButton href="#" tooltip="Events">
-                        <Calendar />
-                        Events
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-                 <SidebarMenuItem>
-                    <SidebarMenuButton href="#" tooltip="Peñas">
-                        <Clapperboard />
-                        Peñas
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-                 <SidebarMenuItem>
-                    <SidebarMenuButton href="#" tooltip="Articles">
-                        <Newspaper />
-                        Articles
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
+                {navLinks.map((link) => (
+                    <SidebarMenuItem key={link.href}>
+                        <SidebarMenuButton 
+                            href={link.href} 
+                            isActive={pathname === link.href} 
+                            tooltip={link.label}
+                        >
+                            <link.icon />
+                            {link.label}
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                ))}
             </SidebarMenu>
         </SidebarContent>
       </Sidebar>
       <SidebarInset>
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-6">
+        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-6 sticky top-0 bg-background z-10">
           <SidebarTrigger className="md:hidden" />
-          <h1 className="flex-1 text-lg font-semibold md:text-2xl">Dashboard</h1>
+          <h1 className="flex-1 text-lg font-semibold md:text-2xl capitalize">
+            {pathname.split('/').pop()?.replace('-', ' ') || 'Dashboard'}
+          </h1>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 lg:p-8">
             {children}
