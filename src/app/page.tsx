@@ -28,7 +28,7 @@ export default async function HomePage() {
             data-ai-hint={heroImage.imageHint}
           />
         )}
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
         <div className="relative z-10 p-4 max-w-4xl">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold !font-headline leading-tight tracking-tight">
             Centro Andaluz de la Habana
