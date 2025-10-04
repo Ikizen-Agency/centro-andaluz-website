@@ -129,9 +129,6 @@ export default async function HomePage() {
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Mission in Havana</h2>
               <p className="text-muted-foreground mb-4">The Centro Andaluz de la Habana is a cultural haven founded by descendants of Andalusian immigrants in Cuba. Our mission is to be a living embassy of Andalusian culture, preserving its rich traditions of music, dance, gastronomy, and art for future generations.</p>
               <p className="text-muted-foreground mb-6">We serve as a vibrant community hub, fostering a sense of identity and belonging among members while welcoming all who wish to experience the warmth and passion of Southern Spain.</p>
-              <Button asChild>
-                <Link href="/members">Meet Our Community <Users className="ml-2 h-4 w-4" /></Link>
-              </Button>
             </div>
             <div className="relative h-80 md:h-96 rounded-lg overflow-hidden shadow-lg">
               {aboutImage && (
