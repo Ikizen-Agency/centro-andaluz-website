@@ -45,4 +45,5 @@ export interface Pena {
     description: string;
     longDescription: string;
     icon: LucideIcon;
+    image: string;
 }
