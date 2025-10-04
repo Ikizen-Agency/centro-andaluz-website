@@ -1,5 +1,7 @@
 import { SidebarProvider, Sidebar, SidebarInset, SidebarHeader, SidebarTrigger, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Home, Newspaper, Calendar, Clapperboard } from "lucide-react";
+import { Logo } from "@/components/logo";
+import Link from "next/link";
 
 export default function DashboardLayout({
   children,
@@ -11,7 +13,9 @@ export default function DashboardLayout({
       <Sidebar>
         <SidebarHeader>
             <div className="p-2 flex justify-between items-center">
-                <h2 className="font-bold text-lg">Dashboard</h2>
+                <Link href="/dashboard">
+                  <Logo />
+                </Link>
                 <SidebarTrigger />
             </div>
         </SidebarHeader>
