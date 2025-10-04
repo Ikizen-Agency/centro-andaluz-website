@@ -39,13 +39,15 @@ export default function Header() {
       )}
     >
       <div className="container mx-auto px-4">
-        <div className="flex h-20 items-center justify-between">
-          <Link href="/" className="flex items-center" onClick={closeMobileMenu}>
-            <Logo />
-            <span className="sr-only">Centro Andaluz de la Habana</span>
-          </Link>
+        <div className="relative flex h-20 items-center">
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center" onClick={closeMobileMenu}>
+                <Logo />
+                <span className="sr-only">Centro Andaluz de la Habana</span>
+            </Link>
+          </div>
           
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center space-x-6">
             {navLinks.map(({ href, label }) => (
               <Link
                 key={href}
@@ -59,8 +61,10 @@ export default function Header() {
               </Link>
             ))}
           </nav>
+          
+          <div className="flex-1" />
 
-          <div className="md:hidden">
+          <div className="md:hidden ml-auto">
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon">
