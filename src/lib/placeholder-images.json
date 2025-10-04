@@ -85,6 +85,36 @@
       "imageHint": "gazpacho soup"
     },
     {
+      "id": "blog-alhambra",
+      "description": "The Court of the Lions in the Alhambra, Granada",
+      "imageUrl": "https://images.unsplash.com/photo-1616113269130-15715a3311e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxhbGhhbWJyYSUyMGdyYW5hZGF8ZW58MHx8fHwxNzU5ODQyMjkwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "alhambra granada"
+    },
+    {
+      "id": "blog-pueblos-blancos",
+      "description": "A picturesque white village in Andalusia",
+      "imageUrl": "https://images.unsplash.com/photo-1596489379801-923f73621435?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwdWVibG9zJTIwYmxhbmNvc3xlbnwwfHx8fDE3NTk4NDIyOTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pueblos blancos"
+    },
+    {
+      "id": "blog-alandalus-science",
+      "description": "Ancient arabic manuscripts and scientific instruments",
+      "imageUrl": "https://images.unsplash.com/photo-1615012559539-7a565893f4e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhcmFiaWMlMjBtYW51c2NyaXB0c3xlbnwwfHx8fDE3NTk4NDIyOTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "arabic manuscripts"
+    },
+    {
+      "id": "blog-semana-santa",
+      "description": "A procession during Semana Santa in Seville",
+      "imageUrl": "https://images.unsplash.com/photo-1650840590823-a1b73c49089f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzZW1hbmElMjBzYW50YSUyMHNldmlsbGV8ZW58MHx8fHwxNzU5ODQyMjkwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "semana santa"
+    },
+    {
+      "id": "blog-sherry-wine",
+      "description": "Glasses of sherry wine in a cellar in Jerez",
+      "imageUrl": "https://images.unsplash.com/photo-1632435498308-333d64c005f0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhbmRhbHVzaWFuJTIwd2luZXxlbnwwfHx8fDE3NTk4NDIyOTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "andalusian wine"
+    },
+    {
       "id": "culture-food",
       "description": "A delicious paella in a pan.",
       "imageUrl": "https://images.unsplash.com/photo-1602755088318-39b7a7e6482a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cGFlbGxhJTIwZm9vZHxlbnwwfHx8fDE3NTk1ODI0ODd8MA&ixlib=rb-4.1.0&q=80&w=1080",

@@ -10,6 +10,11 @@ interface PostModule {
 const postImports: Record<string, () => Promise<PostModule>> = {
   'the-art-of-flamenco': () => import('@/content/blog/the-art-of-flamenco'),
   'a-taste-of-andalusia': () => import('@/content/blog/a-taste-of-andalusia'),
+  'alhambra-jewel-of-moorish-architecture': () => import('@/content/blog/alhambra-jewel-of-moorish-architecture'),
+  'pueblos-blancos-journey-through-time': () => import('@/content/blog/pueblos-blancos-journey-through-time'),
+  'legacy-of-al-andalus': () => import('@/content/blog/legacy-of-al-andalus'),
+  'semana-santa-in-seville': () => import('@/content/blog/semana-santa-in-seville'),
+  'sherry-liquid-gold-of-jerez': () => import('@/content/blog/sherry-liquid-gold-of-jerez'),
 };
 
 export async function getPosts(): Promise<Post[]> {
