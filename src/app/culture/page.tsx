@@ -1,15 +1,13 @@
 
+'use client';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { Utensils, Palette, Dumbbell, Atom } from 'lucide-react';
-
-export const metadata: Metadata = {
-  title: 'Culture | Centro Andaluz de la Habana',
-  description: 'Explore the rich and diverse culture of Andalusia, from its cuisine to its scientific legacy.',
-};
+import { Utensils, Palette, Dumbbell, Atom, Castle, BookOpen, Anchor, Crown, Feather } from 'lucide-react';
+import { useRef } from 'react';
+import Autoplay from "embla-carousel-autoplay";
 
 const cultureTopics = [
   {
@@ -39,10 +37,49 @@ const cultureTopics = [
     description: 'During the Golden Age, cities like Córdoba were global centers of learning. Andalusian scholars made huge advances in medicine, astronomy, and mathematics, preserving classical knowledge.',
     image: 'culture-science',
     icon: Atom,
+  },
+  {
+    id: 'al-andalus',
+    title: 'Al-Andalus',
+    description: 'The heart of Moorish Spain for nearly 800 years, leaving a legacy of stunning architecture like the Alhambra, and profound influences on science, poetry, and music.',
+    image: 'culture-al-andalus',
+    icon: Castle,
+  },
+  {
+    id: 'reconquista',
+    title: 'La Reconquista',
+    description: 'The centuries-long period where Christian kingdoms expanded and ultimately unified Spain, concluding with the fall of Granada in 1492, reshaping the cultural landscape.',
+    image: 'culture-reconquista',
+    icon: Crown,
+  },
+  {
+    id: 'discovery-age',
+    title: 'Age of Discovery',
+    description: 'Andalusia was the gateway to the New World. Ports like Seville and Cádiz were central hubs for exploration, trade, and the exchange of cultures between continents.',
+    image: 'culture-discovery',
+    icon: Anchor,
+  },
+  {
+    id: 'golden-age',
+    title: 'Siglo de Oro',
+    description: 'A period of flourishing art and literature. Andalusian cities, especially Seville, were home to master painters like Velázquez and Murillo, defining Spanish Baroque.',
+    image: 'culture-golden-age',
+    icon: Feather,
+  },
+  {
+    id: 'roman-legacy',
+    title: 'Roman Legacy',
+    description: 'Known as Baetica, Andalusia was a vital Roman province, giving birth to emperors like Trajan. Itálica\'s ruins and Córdoba\'s bridge are testaments to this era.',
+    image: 'culture-roman-legacy',
+    icon: BookOpen,
   }
 ];
 
 export default function CulturePage() {
+  const plugin = useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true })
+  );
+
   return (
     <div className="bg-background">
       <div className="container mx-auto px-4 py-16 md:py-24">
@@ -55,11 +92,14 @@ export default function CulturePage() {
 
         <div className="flex justify-center">
             <Carousel
+            plugins={[plugin.current]}
             opts={{
                 align: "start",
                 loop: true,
             }}
             className="w-full max-w-4xl"
+            onMouseEnter={plugin.current.stop}
+            onMouseLeave={plugin.current.reset}
             >
             <CarouselContent>
                 {cultureTopics.map((topic) => {

@@ -107,6 +107,36 @@
       "description": "An old astrolabe, a historical scientific instrument.",
       "imageUrl": "https://images.unsplash.com/photo-1723988433753-02969bd43c28?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YXN0cm9sYWJlJTIwc2NpZW5jZXxlbnwwfHx8fDE3NTk1ODI0ODd8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "astrolabe science"
+    },
+    {
+      "id": "culture-al-andalus",
+      "description": "The Alhambra palace in Granada at sunset.",
+      "imageUrl": "https://images.unsplash.com/photo-1579947829672-9843653138b1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhbGhhbWJyYXxlbnwwfHx8fDE3NTk4NDIyOTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "alhambra palace"
+    },
+    {
+      "id": "culture-reconquista",
+      "description": "A medieval Spanish castle on a hill.",
+      "imageUrl": "https://images.unsplash.com/photo-1579568943454-3c69f390d453?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzcGFuaXNoJTIwY2FzdGxlfGVufDB8fHx8fDE3NTk4NDIyOTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "spanish castle"
+    },
+    {
+      "id": "culture-discovery",
+      "description": "A replica of a 15th-century caravel ship.",
+      "imageUrl": "https://images.unsplash.com/photo-1549972349-89a31e8b2348?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYXJhdmVsJTIwc2hpcHxlbnwwfHx8fDE3NTk4NDIzMTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "caravel ship"
+    },
+    {
+      "id": "culture-golden-age",
+      "description": "A baroque-style painting reminiscent of Velázquez.",
+      "imageUrl": "https://images.unsplash.com/photo-1617565349443-c64a38755b38?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiYXJvcXVlJTIwcGFpbnRpbmd8ZW58MHx8fHwxNzU5ODQyMzE2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "baroque painting"
+    },
+    {
+      "id": "culture-roman-legacy",
+      "description": "Ancient Roman ruins of an amphitheater.",
+      "imageUrl": "https://images.unsplash.com/photo-1569950785312-32d80d293888?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxSb21hbiUyMHJ1aW5zfGVufDB8fHx8fDE3NTk4NDIyOTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "roman ruins"
     }
   ]
 }
