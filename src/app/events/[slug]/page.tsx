@@ -3,7 +3,7 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { events } from '@/lib/events';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Calendar, MapPin, Ticket } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -40,6 +40,8 @@ export default function EventDetailPage({ params }: Props) {
   }
 
   const eventImage = PlaceHolderImages.find((p) => p.id === event.image);
+  const galleryImages = event.gallery?.map(id => PlaceHolderImages.find(p => p.id === id)).filter(Boolean) || [];
+
 
   return (
     <div className="bg-secondary">
@@ -66,7 +68,27 @@ export default function EventDetailPage({ params }: Props) {
           <div className="grid md:grid-cols-3 gap-8 p-6 md:p-8">
             <div className="md:col-span-2">
               <h2 className="text-2xl font-bold mb-4 !font-headline">About this Event</h2>
-              <p className="text-lg text-foreground/80 whitespace-pre-line">{event.longDescription}</p>
+              <p className="text-lg text-foreground/80 whitespace-pre-line mb-8">{event.longDescription}</p>
+
+              {galleryImages.length > 0 && (
+                <>
+                  <h2 className="text-2xl font-bold mb-4 !font-headline">Gallery</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {galleryImages.map((img) => img && (
+                      <div key={img.id} className="relative aspect-square rounded-lg overflow-hidden shadow-md">
+                        <Image
+                          src={img.imageUrl}
+                          alt={img.description}
+                          fill
+                          className="object-cover"
+                          data-ai-hint={img.imageHint}
+                          sizes="(max-width: 768px) 50vw, 33vw"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
             <div className="md:col-span-1">
               <div className="bg-secondary p-6 rounded-lg space-y-4">
@@ -78,17 +100,7 @@ export default function EventDetailPage({ params }: Props) {
                     <p className="text-muted-foreground">{event.date}</p>
                   </div>
                 </div>
-                <div className="flex items-start">
-                  <MapPin className="w-5 h-5 mr-3 mt-1 flex-shrink-0 text-primary" />
-                  <div>
-                    <p className="font-semibold">Location</p>
-                    <p className="text-muted-foreground">{event.location}</p>
-                  </div>
-                </div>
-                <Button size="lg" className="w-full mt-4">
-                  <Ticket className="w-5 h-5 mr-2" /> Get Tickets
-                </Button>
-                 <Button size="lg" variant="outline" className="w-full" asChild>
+                 <Button size="lg" variant="outline" className="w-full mt-4" asChild>
                     <Link href="/events">
                         Back to Events
                     </Link>

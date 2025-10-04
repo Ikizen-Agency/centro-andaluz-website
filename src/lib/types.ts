@@ -8,6 +8,7 @@ export interface Event {
   description: string;
   longDescription: string;
   image: string;
+  gallery?: string[];
 }
 
 export interface Member {
