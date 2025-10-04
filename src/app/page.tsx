@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Calendar, Feather, Utensils, Music, Users } from "lucide-react";
+import { ArrowRight, Calendar, Feather, Utensils, Music, Users, Palette } from "lucide-react";
 import { events } from "@/lib/events";
 import { getPosts } from "@/lib/posts";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -112,6 +112,11 @@ export default async function HomePage() {
               <h3 className="text-xl font-bold mb-2">Art & Literature</h3>
               <p className="text-muted-foreground">Explore the rich literary heritage and artistic expressions from the land of poets and painters.</p>
             </div>
+          </div>
+          <div className="text-center mt-12">
+            <Button asChild>
+                <Link href="/culture">Explore Culture <Palette className="ml-2 h-4 w-4" /></Link>
+            </Button>
           </div>
         </div>
       </section>
