@@ -1,5 +1,11 @@
 import type { ComponentType } from 'react';
 
+export interface EventArtist {
+  name: string;
+  instrument: string;
+  image: string;
+}
+
 export interface Event {
   slug: string;
   title: string;
@@ -9,6 +15,7 @@ export interface Event {
   longDescription: string;
   image: string;
   gallery?: string[];
+  artists?: EventArtist[];
 }
 
 export interface Member {

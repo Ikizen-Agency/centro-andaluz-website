@@ -3,9 +3,11 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { events } from '@/lib/events';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Calendar } from 'lucide-react';
+import { Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 type Props = {
   params: { slug: string };
@@ -71,7 +73,7 @@ export default function EventDetailPage({ params }: Props) {
               <p className="text-lg text-foreground/80 whitespace-pre-line mb-8">{event.longDescription}</p>
 
               {galleryImages.length > 0 && (
-                <>
+                <div className="mb-8">
                   <h2 className="text-2xl font-bold mb-4 !font-headline">Gallery</h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {galleryImages.map((img) => img && (
@@ -87,8 +89,32 @@ export default function EventDetailPage({ params }: Props) {
                       </div>
                     ))}
                   </div>
-                </>
+                </div>
               )}
+              
+              {event.artists && event.artists.length > 0 && (
+                <div>
+                  <h2 className="text-2xl font-bold mb-4 !font-headline">Guest Artists</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {event.artists.map((artist) => {
+                      const artistImage = PlaceHolderImages.find(p => p.id === artist.image);
+                      return (
+                        <Card key={artist.name} className="flex items-center p-4">
+                          <Avatar className="h-16 w-16 mr-4">
+                             {artistImage && <AvatarImage src={artistImage.imageUrl} alt={artist.name} data-ai-hint={artistImage.imageHint} />}
+                             <AvatarFallback>{artist.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h4 className="font-bold text-lg">{artist.name}</h4>
+                            <p className="text-muted-foreground">{artist.instrument}</p>
+                          </div>
+                        </Card>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
             </div>
             <div className="md:col-span-1">
               <div className="bg-secondary p-6 rounded-lg space-y-4">
