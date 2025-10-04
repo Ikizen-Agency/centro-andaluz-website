@@ -1,7 +1,6 @@
 
 'use client';
 import Image from 'next/image';
-import type { Metadata } from 'next';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
@@ -116,6 +115,7 @@ export default function CulturePage() {
                                     fill
                                     className="object-cover"
                                     data-ai-hint={topicImage.imageHint}
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                                     <div className="absolute bottom-4 left-4">
