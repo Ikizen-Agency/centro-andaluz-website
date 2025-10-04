@@ -6,6 +6,7 @@ import { ArrowRight, Calendar, Feather, Utensils, Music, Users, Palette } from "
 import { events } from "@/lib/events";
 import { getPosts } from "@/lib/posts";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import PenasCarousel from "@/components/penas-carousel";
 
 const heroImage = PlaceHolderImages.find(p => p.id === "hero");
 const aboutImage = PlaceHolderImages.find(p => p.id === "about");
@@ -84,9 +85,23 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Penas Section */}
+      <section className="py-16 md:py-24 bg-secondary">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Nuestras Peñas Culturales</h2>
+          <p className="text-center text-muted-foreground max-w-3xl mx-auto mb-12">Encuentros mensuales que celebran la riqueza de nuestra cultura. Únete a nosotros para vivir el flamenco, la literatura, la gastronomía y mucho más.</p>
+          <PenasCarousel />
+          <div className="text-center mt-12">
+             <Button asChild>
+                <Link href="/penas">Ver Todas las Peñas <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+          </div>
+        </div>
+      </section>
       
       {/* Culture Showcase */}
-      <section className="py-16 md:py-24 bg-secondary">
+      <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">The Soul of Andalusia</h2>
           <p className="text-center text-muted-foreground max-w-3xl mx-auto mb-12">We are dedicated to celebrating the rich tapestry of Andalusian traditions, from the passionate rhythms of flamenco to the exquisite flavors of its cuisine.</p>
@@ -122,7 +137,7 @@ export default async function HomePage() {
       </section>
 
       {/* About Us Section */}
-      <section id="about" className="py-16 md:py-24 bg-background">
+      <section id="about" className="py-16 md:py-24 bg-secondary">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -146,7 +161,7 @@ export default async function HomePage() {
       </section>
 
       {/* Blog Section */}
-      <section className="py-16 md:py-24 bg-secondary">
+      <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">From Our Blog</h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -187,3 +202,5 @@ export default async function HomePage() {
     </div>
   );
 }
+
+    
