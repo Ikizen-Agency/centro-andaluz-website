@@ -1,9 +1,9 @@
 import type { ComponentType } from 'react';
+import type { LucideIcon } from 'lucide-react';
 
 export interface EventArtist {
   name: string;
   instrument: string;
-  image: string;
 }
 
 export interface Event {
@@ -37,3 +37,12 @@ export interface Post {
 }
 
 export interface PostMeta extends Omit<Post, 'slug' | 'component'> {}
+
+export interface Pena {
+    id: string;
+    title: string;
+    day: string;
+    description: string;
+    longDescription: string;
+    icon: LucideIcon;
+}
