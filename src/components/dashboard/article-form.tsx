@@ -81,7 +81,7 @@ export function ArticleForm() {
               </FormControl>
               <FormDescription>This will be the file name and URL for the article.</FormDescription>
               <FormMessage />
-            </FormI>
+            </FormItem>
           )}
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
