@@ -60,12 +60,6 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="hidden md:block">
-             <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                <Link href="/#about">About Us</Link>
-            </Button>
-          </div>
-
           <div className="md:hidden">
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
@@ -100,9 +94,6 @@ export default function Header() {
                       </Link>
                     ))}
                   </nav>
-                   <Button asChild size="lg" className="mt-auto bg-accent hover:bg-accent/90 text-accent-foreground" onClick={closeMobileMenu}>
-                    <Link href="/#about">About Us</Link>
-                  </Button>
                 </div>
               </SheetContent>
             </Sheet>
