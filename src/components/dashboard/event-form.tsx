@@ -26,7 +26,7 @@ import type { Event } from "@/lib/types"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
-import { useFirestore } from "@/firebase"
+import { useFirestore, errorEmitter, FirestorePermissionError } from "@/firebase"
 import { doc, setDoc } from "firebase/firestore"
 
 
@@ -112,21 +112,22 @@ export function EventForm({ initialData, onSave, onCancel }: EventFormProps) {
     // @ts-ignore
     delete dataToSave.image; // Don't save the file object
 
-    try {
-        await setDoc(eventRef, dataToSave, { merge: isEditMode });
+    setDoc(eventRef, dataToSave, { merge: isEditMode })
+      .then(() => {
         toast({
           title: isEditMode ? "Evento Actualizado" : "Evento Creado",
           description: `El evento "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'} con éxito.`,
-        })
+        });
         if (onSave) onSave();
-    } catch(error) {
-        console.error("Error saving event:", error);
-        toast({
-            variant: "destructive",
-            title: "Error",
-            description: "No se pudo guardar el evento."
-        })
-    }
+      })
+      .catch((serverError) => {
+        const permissionError = new FirestorePermissionError({
+          path: eventRef.path,
+          operation: isEditMode ? 'update' : 'create',
+          requestResourceData: dataToSave,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+      });
   }
 
   return (

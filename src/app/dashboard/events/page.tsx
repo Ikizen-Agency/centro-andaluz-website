@@ -10,7 +10,7 @@ import { PlusCircle, Trash2, Pencil } from 'lucide-react';
 import { useState, useMemo } from "react";
 import type { Event } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
-import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
+import { useCollection, useFirestore, useMemoFirebase, errorEmitter, FirestorePermissionError } from "@/firebase";
 import { collection, deleteDoc, doc } from "firebase/firestore";
 
 export default function EventsPage() {
@@ -24,22 +24,23 @@ export default function EventsPage() {
     const eventsCollection = useMemoFirebase(() => collection(firestore, "events"), [firestore]);
     const { data: events, isLoading } = useCollection<Event>(eventsCollection);
 
-    const handleDelete = async (slug: string) => {
-        if (!slug) return;
-        try {
-            await deleteDoc(doc(firestore, "events", slug));
+    const handleDelete = async (id: string) => {
+        if (!id) return;
+        const eventRef = doc(firestore, "events", id);
+        deleteDoc(eventRef)
+          .then(() => {
             toast({
-                title: "Evento Eliminado",
-                description: "El evento ha sido eliminado con éxito."
+              title: "Evento Eliminado",
+              description: "El evento ha sido eliminado con éxito.",
             });
-        } catch (error) {
-            console.error("Error deleting event:", error);
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: "No se pudo eliminar el evento."
+          })
+          .catch((serverError) => {
+            const permissionError = new FirestorePermissionError({
+              path: eventRef.path,
+              operation: 'delete',
             });
-        }
+            errorEmitter.emit('permission-error', permissionError);
+          });
     };
     
     const handleEditClick = (event: Event) => {

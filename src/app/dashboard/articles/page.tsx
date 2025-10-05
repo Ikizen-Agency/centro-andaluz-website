@@ -10,7 +10,7 @@ import { ArticleForm } from "@/components/dashboard/article-form";
 import type { Post } from '@/lib/types';
 import { PlusCircle, Trash2, Pencil } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
+import { useCollection, useFirestore, useMemoFirebase, errorEmitter, FirestorePermissionError } from "@/firebase";
 import { collection, deleteDoc, doc } from "firebase/firestore";
 
 export default function ArticlesPage() {
@@ -25,22 +25,23 @@ export default function ArticlesPage() {
     const { data: posts, isLoading } = useCollection<Post>(postsCollection);
 
 
-    const handleDelete = async (slug: string) => {
-        if (!slug) return;
-        try {
-            await deleteDoc(doc(firestore, "blog_posts", slug));
-            toast({
-                title: "Artículo Eliminado",
-                description: "El artículo ha sido eliminado con éxito."
+    const handleDelete = async (id: string) => {
+        if (!id) return;
+        const postRef = doc(firestore, "blog_posts", id);
+        deleteDoc(postRef)
+            .then(() => {
+                toast({
+                    title: "Artículo Eliminado",
+                    description: "El artículo ha sido eliminado con éxito."
+                });
+            })
+            .catch((serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: postRef.path,
+                    operation: 'delete',
+                });
+                errorEmitter.emit('permission-error', permissionError);
             });
-        } catch (error) {
-             console.error("Error deleting post:", error);
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: "No se pudo eliminar el artículo."
-            });
-        }
     };
     
     const handleEditClick = (post: Post) => {

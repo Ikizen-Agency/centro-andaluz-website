@@ -27,7 +27,7 @@ import type { Post } from "@/lib/types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { useFirestore } from "@/firebase";
+import { useFirestore, errorEmitter, FirestorePermissionError } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 const articleFormSchema = z.object({
@@ -106,24 +106,24 @@ export function ArticleForm({ initialData, onSave, onCancel }: ArticleFormProps)
     // @ts-ignore
     delete dataToSave.image; 
 
-    try {
-      await setDoc(postRef, dataToSave, { merge: isEditMode });
-      toast({
-        title: isEditMode ? "Artículo Actualizado" : "Artículo Creado",
-        description: `El artículo "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'}.`,
-      })
-      
-      if (onSave) {
-          onSave();
-      }
-    } catch(error) {
-        console.error("Error saving post:", error);
+    setDoc(postRef, dataToSave, { merge: isEditMode })
+      .then(() => {
         toast({
-            variant: "destructive",
-            title: "Error",
-            description: "No se pudo guardar el artículo."
-        })
-    }
+          title: isEditMode ? "Artículo Actualizado" : "Artículo Creado",
+          description: `El artículo "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'}.`,
+        });
+        if (onSave) {
+            onSave();
+        }
+      })
+      .catch((serverError) => {
+        const permissionError = new FirestorePermissionError({
+          path: postRef.path,
+          operation: isEditMode ? 'update' : 'create',
+          requestResourceData: dataToSave,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+      });
   }
 
   return (

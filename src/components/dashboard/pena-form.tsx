@@ -1,3 +1,4 @@
+
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -20,7 +21,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import type { Pena } from "@/lib/types"
-import { useFirestore } from "@/firebase"
+import { useFirestore, errorEmitter, FirestorePermissionError } from "@/firebase"
 
 const penaFormSchema = z.object({
   title: z.string().min(2, "El título debe tener al menos 2 caracteres."),
@@ -84,23 +85,24 @@ export function PenaForm({ initialData, onSave, onCancel }: PenaFormProps) {
     // @ts-ignore
     delete dataToSave.image; 
 
-    try {
-        await setDoc(penaRef, dataToSave, { merge: true });
-        toast({
-          title: isEditMode ? "Peña Actualizada" : "Peña Creada",
-          description: `La peña "${data.title}" ha sido ${isEditMode ? 'actualizada' : 'creada'}.`,
-        });
-        if (onSave) {
-            onSave();
-        }
-    } catch(error) {
-        console.error("Error saving pena:", error);
-        toast({
-            variant: "destructive",
-            title: "Error",
-            description: "No se pudo guardar la peña."
+    setDoc(penaRef, dataToSave, { merge: true })
+        .then(() => {
+            toast({
+              title: isEditMode ? "Peña Actualizada" : "Peña Creada",
+              description: `La peña "${data.title}" ha sido ${isEditMode ? 'actualizada' : 'creada'}.`,
+            });
+            if (onSave) {
+                onSave();
+            }
         })
-    }
+        .catch((serverError) => {
+            const permissionError = new FirestorePermissionError({
+              path: penaRef.path,
+              operation: isEditMode ? 'update' : 'create',
+              requestResourceData: dataToSave,
+            });
+            errorEmitter.emit('permission-error', permissionError);
+        });
   }
 
   return (

@@ -7,10 +7,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { PenaForm } from "@/components/dashboard/pena-form";
 import { PlusCircle, Trash2, Pencil } from 'lucide-react';
-import { useState } from "react";
+import { useState, createElement } from "react";
 import type { Pena } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
-import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
+import { useCollection, useFirestore, useMemoFirebase, errorEmitter, FirestorePermissionError } from "@/firebase";
 import { collection, deleteDoc, doc } from "firebase/firestore";
 import * as lucideIcons from 'lucide-react';
 
@@ -27,20 +27,21 @@ export default function PenasPage() {
 
     const handleDelete = async (id: string) => {
         if (!id) return;
-        try {
-            await deleteDoc(doc(firestore, "penas", id));
-            toast({
-                title: "Peña Eliminada",
-                description: "La peña cultural ha sido eliminada con éxito."
+        const penaRef = doc(firestore, "penas", id);
+        deleteDoc(penaRef)
+            .then(() => {
+                toast({
+                    title: "Peña Eliminada",
+                    description: "La peña cultural ha sido eliminada con éxito."
+                });
+            })
+            .catch((serverError) => {
+                const permissionError = new FirestorePermissionError({
+                    path: penaRef.path,
+                    operation: 'delete',
+                });
+                errorEmitter.emit('permission-error', permissionError);
             });
-        } catch (error) {
-            console.error("Error deleting pena:", error);
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: "No se pudo eliminar la peña."
-            });
-        }
     };
 
     const handleEditClick = (pena: Pena) => {
@@ -168,7 +169,7 @@ export default function PenasPage() {
                                 <div>
                                     <h3 className="font-semibold">Icono</h3>
                                     <div className="flex items-center gap-2">
-                                        {React.createElement(getIconComponent(selectedPena.icon), { className: "h-5 w-5 text-primary" })}
+                                        {createElement(getIconComponent(selectedPena.icon), { className: "h-5 w-5 text-primary" })}
                                         <p className="text-sm text-muted-foreground">{typeof selectedPena.icon === 'string' ? selectedPena.icon : selectedPena.icon.name}</p>
                                     </div>
                                 </div>
