@@ -22,7 +22,7 @@ export interface Member {
   id: number;
   name: string;
   role: string;
-  image: string;
+  category: 'Junta Directiva' | 'Comisiones' | 'Colaboradores' | 'Colaboración Asociaciones';
 }
 
 export interface Post {

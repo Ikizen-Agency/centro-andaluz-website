@@ -5,6 +5,7 @@ import { getPost, getPosts } from '@/lib/posts';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { members } from '@/lib/members';
+import type { Member } from '@/lib/types';
 
 type Props = {
   params: { slug: string };
@@ -41,8 +42,9 @@ export default async function PostPage({ params }: Props) {
 
   const PostContent = post.component;
   const postImage = PlaceHolderImages.find((p) => p.id === post.image);
+  
+  // Find author info in members list. It's not guaranteed to exist.
   const authorInfo = members.find(m => m.name === post.author);
-  const authorImage = authorInfo ? PlaceHolderImages.find(p => p.id === authorInfo.image) : null;
 
 
   return (
@@ -54,11 +56,10 @@ export default async function PostPage({ params }: Props) {
               {post.title}
             </h1>
             <div className="flex items-center justify-center space-x-4 text-muted-foreground">
-               {authorInfo && (
+               {post.author && (
                 <div className="flex items-center space-x-2">
                     <Avatar className="h-8 w-8">
-                        {authorImage && <AvatarImage src={authorImage.imageUrl} alt={authorInfo.name} data-ai-hint={authorImage.imageHint} />}
-                        <AvatarFallback>{authorInfo.name.charAt(0)}</AvatarFallback>
+                         <AvatarFallback>{post.author.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                     </Avatar>
                     <span>{post.author}</span>
                 </div>
