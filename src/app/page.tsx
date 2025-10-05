@@ -7,8 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Calendar, Feather, Utensils, Music, Users, Palette } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import PenasCarousel from "@/components/penas-carousel";
-import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
-import { collection } from "firebase/firestore";
+import { useSupabaseSelect } from "@/supabase/hooks";
 import type { Event, Post } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getPosts } from "@/lib/posts.tsx";
@@ -17,13 +16,11 @@ const heroImage = PlaceHolderImages.find(p => p.id === "hero");
 const aboutImage = PlaceHolderImages.find(p => p.id === "about");
 
 export default function HomePage() {
-  const firestore = useFirestore();
+  const { data: eventsData, isLoading: isLoadingEvents } = useSupabaseSelect<Event>('events', { order: { column: 'date', ascending: false } });
+  const upcomingEvents = Array.isArray(eventsData) ? eventsData : [];
 
-  const eventsCollection = useMemoFirebase(() => collection(firestore, "events"), [firestore]);
-  const { data: upcomingEvents, isLoading: isLoadingEvents } = useCollection<Event>(eventsCollection);
-
-  const postsCollection = useMemoFirebase(() => collection(firestore, "blog_posts"), [firestore]);
-  const { data: latestPosts, isLoading: isLoadingPosts } = useCollection<Post>(postsCollection);
+  const { data: postsData, isLoading: isLoadingPosts } = useSupabaseSelect<Post>('blog_posts', { order: { column: 'date', ascending: false } });
+  const latestPosts = Array.isArray(postsData) ? postsData : [];
 
 
   return (

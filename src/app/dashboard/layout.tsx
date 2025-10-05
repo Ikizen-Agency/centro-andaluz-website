@@ -5,8 +5,7 @@ import { Home, Newspaper, Calendar, Clapperboard, LogOut, Loader } from "lucide-
 import { Logo } from "@/components/logo";
 import Link from "next/link";
 import { usePathname, redirect } from "next/navigation";
-import { useAuth, useUser } from "@/firebase";
-import { signOut } from "firebase/auth";
+import { useSupabase, useSupabaseUser } from "@/supabase/provider";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -17,13 +16,13 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { user, isUserLoading } = useUser();
-  const auth = useAuth();
+  const { user, isUserLoading } = useSupabaseUser();
+  const { client } = useSupabase();
   const { toast } = useToast();
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      await client.auth.signOut();
       toast({
         title: "Sesión Cerrada",
         description: "Has cerrado sesión con éxito."

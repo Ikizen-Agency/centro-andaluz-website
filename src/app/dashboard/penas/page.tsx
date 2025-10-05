@@ -10,8 +10,8 @@ import { PlusCircle, Trash2, Pencil } from 'lucide-react';
 import { useState, createElement } from "react";
 import type { Pena } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
-import { useCollection, useFirestore, useMemoFirebase, errorEmitter, FirestorePermissionError } from "@/firebase";
-import { collection, deleteDoc, doc } from "firebase/firestore";
+import { useSupabaseClient } from "@/supabase/provider";
+import { useSupabaseSelect } from "@/supabase/hooks";
 import * as lucideIcons from 'lucide-react';
 
 export default function PenasPage() {
@@ -20,28 +20,19 @@ export default function PenasPage() {
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [selectedPena, setSelectedPena] = useState<Pena | null>(null);
     const { toast } = useToast();
-    const firestore = useFirestore();
-
-    const penasCollection = useMemoFirebase(() => collection(firestore, "penas"), [firestore]);
-    const { data: penas, isLoading } = useCollection<Pena>(penasCollection);
+    const supabase = useSupabaseClient();
+    const { data, isLoading, refetch } = useSupabaseSelect<Pena>('penas', { order: { column: 'title', ascending: true } });
+    const penas = Array.isArray(data) ? data : [];
 
     const handleDelete = async (id: string) => {
         if (!id) return;
-        const penaRef = doc(firestore, "penas", id);
-        deleteDoc(penaRef)
-            .then(() => {
-                toast({
-                    title: "Peña Eliminada",
-                    description: "La peña cultural ha sido eliminada con éxito."
-                });
-            })
-            .catch((serverError) => {
-                const permissionError = new FirestorePermissionError({
-                    path: penaRef.path,
-                    operation: 'delete',
-                });
-                errorEmitter.emit('permission-error', permissionError);
-            });
+        const { error } = await supabase.from('penas').delete().eq('id', id);
+        if (error) {
+          toast({ variant: 'destructive', title: 'Error', description: 'No se pudo eliminar la peña.' });
+          return;
+        }
+        toast({ title: 'Peña Eliminada', description: 'La peña cultural ha sido eliminada con éxito.' });
+        refetch();
     };
 
     const handleEditClick = (pena: Pena) => {

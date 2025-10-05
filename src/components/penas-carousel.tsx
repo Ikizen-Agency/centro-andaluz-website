@@ -7,8 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { useRef } from 'react';
 import Autoplay from "embla-carousel-autoplay";
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { useSupabaseSelect } from '@/supabase/hooks';
 import type { Pena } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -17,9 +16,8 @@ export default function PenasCarousel() {
     Autoplay({ delay: 5000, stopOnInteraction: true })
   );
 
-  const firestore = useFirestore();
-  const penasCollection = useMemoFirebase(() => collection(firestore, 'penas'), [firestore]);
-  const { data: penas, isLoading } = useCollection<Pena>(penasCollection);
+  const { data, isLoading } = useSupabaseSelect<Pena>('penas', { order: { column: 'title', ascending: true } });
+  const penas = Array.isArray(data) ? data : [];
 
   const getIconComponent = (iconName: string | lucideIcons.LucideIcon) => {
     if (typeof iconName !== 'string') return iconName as lucideIcons.LucideIcon;

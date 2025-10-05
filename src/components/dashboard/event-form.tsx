@@ -4,6 +4,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { uploadPublicImage } from "@/supabase/storage"
 import { useEffect } from "react"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
@@ -26,8 +27,7 @@ import type { Event } from "@/lib/types"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
-import { useFirestore, errorEmitter, FirestorePermissionError } from "@/firebase"
-import { doc, setDoc } from "firebase/firestore"
+import { useSupabaseClient } from "@/supabase/provider"
 
 
 const eventFormSchema = z.object({
@@ -71,7 +71,7 @@ const parseDate = (dateStr: string | Date): Date | undefined => {
 export function EventForm({ initialData, onSave, onCancel }: EventFormProps) {
   const { toast } = useToast();
   const isEditMode = !!initialData;
-  const firestore = useFirestore();
+  const supabase = useSupabaseClient();
 
   const form = useForm<EventFormValues>({
     resolver: zodResolver(eventFormSchema),
@@ -97,37 +97,43 @@ export function EventForm({ initialData, onSave, onCancel }: EventFormProps) {
   }, [initialData, isEditMode, form]);
 
   async function onSubmit(data: EventFormValues) {
-    const docId = isEditMode ? initialData!.id! : data.slug;
-    const eventRef = doc(firestore, "events", docId);
-    
-    // In a real app, you would handle image uploads and get a URL.
-    // For now, we'll just use a placeholder string.
-    const imageUrl = `placeholder-for-${data.slug}`;
-
-    const dataToSave = {
-        ...data,
-        date: format(data.date, "EEEE, d 'de' MMMM 'de' yyyy", { locale: es }),
-        image: isEditMode && !data.image ? initialData?.image : imageUrl,
+    const id = isEditMode ? initialData!.id! : data.slug;
+    let imagePublicUrl = initialData?.image || '';
+    const imageFile = (data as any).image?.[0] as File | undefined;
+    if (imageFile) {
+      const { publicUrl, error } = await uploadPublicImage(supabase, { folder: 'events', baseId: id, file: imageFile });
+      if (error) {
+        toast({ variant: 'destructive', title: 'Error subiendo imagen', description: error });
+        return;
+      }
+      imagePublicUrl = publicUrl || imagePublicUrl;
+    }
+    const payload = {
+      id,
+      slug: data.slug,
+      title: data.title,
+      date: format(data.date, "EEEE, d 'de' MMMM 'de' yyyy", { locale: es }),
+      location: data.location,
+      description: data.description,
+      long_description: data.longDescription,
+      image: imagePublicUrl,
     };
-    // @ts-ignore
-    delete dataToSave.image; // Don't save the file object
+    // Imagen subida si corresponde
 
-    setDoc(eventRef, dataToSave, { merge: isEditMode })
-      .then(() => {
-        toast({
-          title: isEditMode ? "Evento Actualizado" : "Evento Creado",
-          description: `El evento "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'} con éxito.`,
-        });
-        if (onSave) onSave();
-      })
-      .catch((serverError) => {
-        const permissionError = new FirestorePermissionError({
-          path: eventRef.path,
-          operation: isEditMode ? 'update' : 'create',
-          requestResourceData: dataToSave,
-        });
-        errorEmitter.emit('permission-error', permissionError);
-      });
+    const { error } = isEditMode
+      ? await supabase.from('events').update(payload).eq('id', id)
+      : await supabase.from('events').insert(payload);
+
+    if (error) {
+      toast({ variant: 'destructive', title: 'Error', description: 'No se pudo guardar el evento.' });
+      return;
+    }
+
+    toast({
+      title: isEditMode ? 'Evento Actualizado' : 'Evento Creado',
+      description: `El evento "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'} con éxito.`,
+    });
+    if (onSave) onSave();
   }
 
   return (

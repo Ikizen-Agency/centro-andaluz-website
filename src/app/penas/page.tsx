@@ -7,16 +7,14 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowRight, HelpCircle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import * as lucideIcons from 'lucide-react';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { useSupabaseSelect } from '@/supabase/hooks';
 import type { Pena } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
 
 export default function PenasPage() {
-    const firestore = useFirestore();
-    const penasCollection = useMemoFirebase(() => collection(firestore, 'penas'), [firestore]);
-    const { data: penas, isLoading } = useCollection<Pena>(penasCollection);
+    const { data, isLoading } = useSupabaseSelect<Pena>('penas', { order: { column: 'title', ascending: true } });
+    const penas = Array.isArray(data) ? data : [];
 
     const getIconComponent = (iconName: string | LucideIcon): LucideIcon => {
         if (typeof iconName !== 'string') return iconName;

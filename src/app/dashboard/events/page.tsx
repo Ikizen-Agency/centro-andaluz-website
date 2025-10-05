@@ -10,8 +10,8 @@ import { PlusCircle, Trash2, Pencil } from 'lucide-react';
 import { useState, useMemo } from "react";
 import type { Event } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
-import { useCollection, useFirestore, useMemoFirebase, errorEmitter, FirestorePermissionError } from "@/firebase";
-import { collection, deleteDoc, doc } from "firebase/firestore";
+import { useSupabaseClient } from "@/supabase/provider";
+import { useSupabaseSelect } from "@/supabase/hooks";
 
 export default function EventsPage() {
     const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
@@ -19,28 +19,19 @@ export default function EventsPage() {
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
     const { toast } = useToast();
-    const firestore = useFirestore();
-
-    const eventsCollection = useMemoFirebase(() => collection(firestore, "events"), [firestore]);
-    const { data: events, isLoading } = useCollection<Event>(eventsCollection);
+    const supabase = useSupabaseClient();
+    const { data, isLoading, refetch } = useSupabaseSelect<Event>('events', { order: { column: 'date', ascending: false } });
+    const events = Array.isArray(data) ? data : [];
 
     const handleDelete = async (id: string) => {
         if (!id) return;
-        const eventRef = doc(firestore, "events", id);
-        deleteDoc(eventRef)
-          .then(() => {
-            toast({
-              title: "Evento Eliminado",
-              description: "El evento ha sido eliminado con éxito.",
-            });
-          })
-          .catch((serverError) => {
-            const permissionError = new FirestorePermissionError({
-              path: eventRef.path,
-              operation: 'delete',
-            });
-            errorEmitter.emit('permission-error', permissionError);
-          });
+        const { error } = await supabase.from('events').delete().eq('id', id);
+        if (error) {
+          toast({ variant: 'destructive', title: 'Error', description: 'No se pudo eliminar el evento.' });
+          return;
+        }
+        toast({ title: 'Evento Eliminado', description: 'El evento ha sido eliminado con éxito.' });
+        refetch();
     };
     
     const handleEditClick = (event: Event) => {

@@ -27,8 +27,8 @@ import type { Post } from "@/lib/types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { useFirestore, errorEmitter, FirestorePermissionError } from "@/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { useSupabaseClient } from "@/supabase/provider";
+import { uploadPublicImage } from "@/supabase/storage"
 
 const articleFormSchema = z.object({
   title: z.string().min(2, "El título debe tener al menos 2 caracteres."),
@@ -64,7 +64,7 @@ const parseDate = (dateStr: string | Date): Date | undefined => {
 export function ArticleForm({ initialData, onSave, onCancel }: ArticleFormProps) {
   const { toast } = useToast();
   const isEditMode = !!initialData;
-  const firestore = useFirestore();
+  const supabase = useSupabaseClient();
 
   const form = useForm<ArticleFormValues>({
     resolver: zodResolver(articleFormSchema),
@@ -93,37 +93,40 @@ export function ArticleForm({ initialData, onSave, onCancel }: ArticleFormProps)
   }, [initialData, isEditMode, form]);
 
   async function onSubmit(data: ArticleFormValues) {
-    const docId = isEditMode ? initialData!.id! : data.slug;
-    const postRef = doc(firestore, "blog_posts", docId);
-    
-    const imageUrl = `placeholder-for-${data.slug}`;
+    const id = isEditMode ? initialData!.id! : data.slug;
+    let imagePublicUrl = initialData?.image || '';
+    const imageFile = (data as any).image?.[0] as File | undefined;
+    if (imageFile) {
+      const { publicUrl, error } = await uploadPublicImage(supabase, { folder: 'blog', baseId: id, file: imageFile });
+      if (error) {
+        toast({ variant: 'destructive', title: 'Error subiendo imagen', description: error });
+        return;
+      }
+      imagePublicUrl = publicUrl || imagePublicUrl;
+    }
 
-    const dataToSave = {
-        ...data,
-        date: format(data.date, "d 'de' MMMM 'de' yyyy", { locale: es }),
-        image: isEditMode && !data.image ? initialData?.image : imageUrl,
+    const payload = {
+      id,
+      slug: data.slug,
+      title: data.title,
+      author: data.author,
+      date: format(data.date, "d 'de' MMMM 'de' yyyy", { locale: es }),
+      description: data.description,
+      content: data.content,
+      image: imagePublicUrl,
     };
-    // @ts-ignore
-    delete dataToSave.image; 
 
-    setDoc(postRef, dataToSave, { merge: isEditMode })
-      .then(() => {
-        toast({
-          title: isEditMode ? "Artículo Actualizado" : "Artículo Creado",
-          description: `El artículo "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'}.`,
-        });
-        if (onSave) {
-            onSave();
-        }
-      })
-      .catch((serverError) => {
-        const permissionError = new FirestorePermissionError({
-          path: postRef.path,
-          operation: isEditMode ? 'update' : 'create',
-          requestResourceData: dataToSave,
-        });
-        errorEmitter.emit('permission-error', permissionError);
-      });
+    const { error } = isEditMode
+      ? await supabase.from('blog_posts').update(payload).eq('id', id)
+      : await supabase.from('blog_posts').insert(payload);
+
+    if (error) {
+      toast({ variant: 'destructive', title: 'Error', description: 'No se pudo guardar el artículo.' });
+      return;
+    }
+
+    toast({ title: isEditMode ? 'Artículo Actualizado' : 'Artículo Creado', description: `El artículo "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'}.` });
+    if (onSave) onSave();
   }
 
   return (

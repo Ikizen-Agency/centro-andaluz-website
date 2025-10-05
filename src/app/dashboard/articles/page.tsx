@@ -10,8 +10,8 @@ import { ArticleForm } from "@/components/dashboard/article-form";
 import type { Post } from '@/lib/types';
 import { PlusCircle, Trash2, Pencil } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useCollection, useFirestore, useMemoFirebase, errorEmitter, FirestorePermissionError } from "@/firebase";
-import { collection, deleteDoc, doc } from "firebase/firestore";
+import { useSupabaseClient } from "@/supabase/provider";
+import { useSupabaseSelect } from "@/supabase/hooks";
 
 export default function ArticlesPage() {
     const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
@@ -19,29 +19,20 @@ export default function ArticlesPage() {
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
     const { toast } = useToast();
-    const firestore = useFirestore();
-
-    const postsCollection = useMemoFirebase(() => collection(firestore, "blog_posts"), [firestore]);
-    const { data: posts, isLoading } = useCollection<Post>(postsCollection);
+    const supabase = useSupabaseClient();
+    const { data, isLoading, refetch } = useSupabaseSelect<Post>('blog_posts', { order: { column: 'date', ascending: false } });
+    const posts = Array.isArray(data) ? data : [];
 
 
     const handleDelete = async (id: string) => {
         if (!id) return;
-        const postRef = doc(firestore, "blog_posts", id);
-        deleteDoc(postRef)
-            .then(() => {
-                toast({
-                    title: "Artículo Eliminado",
-                    description: "El artículo ha sido eliminado con éxito."
-                });
-            })
-            .catch((serverError) => {
-                const permissionError = new FirestorePermissionError({
-                    path: postRef.path,
-                    operation: 'delete',
-                });
-                errorEmitter.emit('permission-error', permissionError);
-            });
+        const { error } = await supabase.from('blog_posts').delete().eq('id', id);
+        if (error) {
+          toast({ variant: 'destructive', title: 'Error', description: 'No se pudo eliminar el artículo.' });
+          return;
+        }
+        toast({ title: 'Artículo Eliminado', description: 'El artículo ha sido eliminado con éxito.' });
+        refetch();
     };
     
     const handleEditClick = (post: Post) => {

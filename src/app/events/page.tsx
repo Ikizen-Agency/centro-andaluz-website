@@ -5,16 +5,14 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Calendar, MapPin } from 'lucide-react';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { useSupabaseSelect } from '@/supabase/hooks';
 import type { Event } from '@/lib/types';
-import { collection } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 
 
 export default function EventsPage() {
-  const firestore = useFirestore();
-  const eventsCollection = useMemoFirebase(() => collection(firestore, "events"), [firestore]);
-  const { data: events, isLoading } = useCollection<Event>(eventsCollection);
+  const { data, isLoading } = useSupabaseSelect<Event>('events', { order: { column: 'date', ascending: false } });
+  const events = Array.isArray(data) ? data : [];
   
   return (
     <div className="bg-background">

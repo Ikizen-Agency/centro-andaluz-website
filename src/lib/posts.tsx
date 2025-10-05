@@ -41,34 +41,8 @@ export async function getPosts(): Promise<Post[]> {
 
   const localPosts = await Promise.all(localPostsPromises);
 
-  // Then, get posts from Firestore
-  try {
-    const postsCollection = collection(firestore, 'blog_posts');
-    const postsSnapshot = await getDocs(postsCollection);
-    const firestorePosts: Post[] = postsSnapshot.docs.map(doc => {
-      const data = doc.data();
-      return {
-        id: doc.id,
-        slug: data.slug,
-        title: data.title,
-        description: data.description,
-        author: data.author,
-        date: data.date, // Assuming date is a string
-        image: data.image,
-        content: data.content,
-        component: createComponentFromContent(data.content || ''),
-      };
-    });
-    
-    // Combine and sort
-    const allPosts = [...localPosts, ...firestorePosts];
-    return allPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  } catch (error) {
-    console.warn("Error fetching posts from Firestore, falling back to local:", error);
-    // Sort local posts by date, newest first
-    return localPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }
+  // Firestore removed: return local posts only
+  return localPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 export async function getPost(slug: string): Promise<Post | undefined> {

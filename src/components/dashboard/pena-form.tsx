@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useEffect } from "react"
-import { doc, setDoc } from "firebase/firestore"
+import { uploadPublicImage } from "@/supabase/storage"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import type { Pena } from "@/lib/types"
-import { useFirestore, errorEmitter, FirestorePermissionError } from "@/firebase"
+import { useSupabaseClient } from "@/supabase/provider"
 
 const penaFormSchema = z.object({
   title: z.string().min(2, "El título debe tener al menos 2 caracteres."),
@@ -43,7 +43,7 @@ interface PenaFormProps {
 export function PenaForm({ initialData, onSave, onCancel }: PenaFormProps) {
   const { toast } = useToast();
   const isEditMode = !!initialData;
-  const firestore = useFirestore();
+  const supabase = useSupabaseClient();
 
   const form = useForm<PenaFormValues>({
     resolver: zodResolver(penaFormSchema),
@@ -68,41 +68,40 @@ export function PenaForm({ initialData, onSave, onCancel }: PenaFormProps) {
   }, [initialData, isEditMode, form]);
 
   async function onSubmit(data: PenaFormValues) {
-    // In a real app, you'd send this to a server
-    if (!firestore) return;
-    
     const slug = data.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
-    const docId = isEditMode ? initialData!.id! : slug;
-    const penaRef = doc(firestore, "penas", docId);
-    
-    const imageUrl = `placeholder-for-${slug}`;
+    const id = isEditMode ? initialData!.id! : slug;
+    let imagePublicUrl = initialData?.image || '';
+    const imageFile = (data as any).image?.[0] as File | undefined;
+    if (imageFile) {
+      const { publicUrl, error } = await uploadPublicImage(supabase, { folder: 'penas', baseId: id, file: imageFile });
+      if (error) {
+        toast({ variant: 'destructive', title: 'Error subiendo imagen', description: error });
+        return;
+      }
+      imagePublicUrl = publicUrl || imagePublicUrl;
+    }
 
-    const dataToSave = {
-      ...data,
-      id: docId,
-      image: isEditMode && !data.image ? initialData?.image : imageUrl,
+    const payload = {
+      id,
+      title: data.title,
+      day: data.day,
+      description: data.description,
+      long_description: data.longDescription,
+      icon: data.icon,
+      image: imagePublicUrl,
     };
-    // @ts-ignore
-    delete dataToSave.image; 
 
-    setDoc(penaRef, dataToSave, { merge: true })
-        .then(() => {
-            toast({
-              title: isEditMode ? "Peña Actualizada" : "Peña Creada",
-              description: `La peña "${data.title}" ha sido ${isEditMode ? 'actualizada' : 'creada'}.`,
-            });
-            if (onSave) {
-                onSave();
-            }
-        })
-        .catch((serverError) => {
-            const permissionError = new FirestorePermissionError({
-              path: penaRef.path,
-              operation: isEditMode ? 'update' : 'create',
-              requestResourceData: dataToSave,
-            });
-            errorEmitter.emit('permission-error', permissionError);
-        });
+    const { error } = isEditMode
+      ? await supabase.from('penas').update(payload).eq('id', id)
+      : await supabase.from('penas').insert(payload);
+
+    if (error) {
+      toast({ variant: 'destructive', title: 'Error', description: 'No se pudo guardar la peña.' });
+      return;
+    }
+
+    toast({ title: isEditMode ? 'Peña Actualizada' : 'Peña Creada', description: `La peña "${data.title}" ha sido ${isEditMode ? 'actualizada' : 'creada'}.` });
+    if (onSave) onSave();
   }
 
   return (

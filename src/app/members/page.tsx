@@ -5,8 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { User, Users } from 'lucide-react';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { useSupabaseSelect } from '@/supabase/hooks';
 import type { Member } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -43,9 +42,8 @@ const SkeletonMemberCard = () => (
 )
 
 export default function MembersPage() {
-  const firestore = useFirestore();
-  const membersCollection = useMemoFirebase(() => collection(firestore, 'members'), [firestore]);
-  const { data: members, isLoading } = useCollection<Member>(membersCollection);
+  const { data, isLoading } = useSupabaseSelect<Member>('members', { order: { column: 'name', ascending: true } });
+  const members = Array.isArray(data) ? data : [];
 
   const juntaDirectiva = members?.filter(m => m.category === 'Junta Directiva') || [];
   const comisiones = members?.filter(m => m.category === 'Comisiones') || [];

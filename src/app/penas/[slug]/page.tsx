@@ -7,8 +7,7 @@ import { Calendar, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
-import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { useSupabaseSelect } from '@/supabase/hooks';
 import type { Pena } from '@/lib/types';
 import * as lucideIcons from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -18,9 +17,8 @@ type Props = {
 };
 
 export default function PenaDetailPage({ params }: Props) {
-  const firestore = useFirestore();
-  const penaRef = useMemoFirebase(() => doc(firestore, 'penas', params.slug), [firestore, params.slug]);
-  const { data: pena, isLoading } = useDoc<Pena>(penaRef);
+  const { data, isLoading } = useSupabaseSelect<Pena>('penas', { single: true, eq: [{ column: 'id', value: params.slug }] });
+  const pena = (data && !Array.isArray(data)) ? data : null;
 
   if (isLoading) {
     return (

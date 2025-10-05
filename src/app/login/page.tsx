@@ -6,8 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useSupabaseClient } from '@/supabase/provider';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/logo';
@@ -16,7 +15,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const auth = useAuth();
+  const supabase = useSupabaseClient();
   const { toast } = useToast();
   const router = useRouter();
 
@@ -33,7 +32,8 @@ export default function LoginPage() {
 
     setIsLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
       toast({
         title: 'Inicio de Sesión Exitoso',
         description: 'Bienvenido al panel de control.',
@@ -41,10 +41,11 @@ export default function LoginPage() {
       router.push('/dashboard');
     } catch (error: any) {
       console.error('Login error:', error);
+      const description = typeof error?.message === 'string' ? error.message : 'No se pudo iniciar sesión.';
       toast({
         variant: 'destructive',
         title: 'Error de Inicio de Sesión',
-        description: 'Las credenciales son incorrectas. Por favor, inténtalo de nuevo.',
+        description,
       });
     } finally {
       setIsLoading(false);
