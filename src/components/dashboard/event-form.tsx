@@ -31,7 +31,7 @@ import { doc, setDoc } from "firebase/firestore"
 
 
 const eventFormSchema = z.object({
-  title: z.string().min(2, "El título debe tener al menos 2 caracteres.").max(100, "El título debe tener menos de 100 caracteres."),
+  title: z.string().min(2, "El título debe tener al menos 2 caracteres.").max(100, "El título no puede exceder los 100 caracteres."),
   slug: z.string().min(2, "El slug debe tener al menos 2 caracteres.").regex(/^[a-z0-9-]+$/, "El slug debe estar en minúsculas con guiones."),
   date: z.date({
     required_error: "La fecha es obligatoria.",
@@ -263,3 +263,5 @@ export function EventForm({ initialData, onSave, onCancel }: EventFormProps) {
     </Form>
   )
 }
+
+    
