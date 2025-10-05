@@ -1,68 +1,33 @@
-/**
- * @file Firebase Security Rules for Centro Andaluz de la Habana.
- *
- * @core_philosophy This ruleset provides public read access to all data (events, members, blog posts) while restricting write access to authenticated users.
- * @data_structure The database consists of three top-level collections: `/events/{eventId}`, `/members/{memberId}`, and `/blog_posts/{blogPostId}`.
- * @key_security_decisions
- *   - All data is publicly readable.
- *   - Write access is restricted to authenticated users.
- *   - No schema validation is performed (prototyping mode).
- */
+
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    /**
-     * @description Allows public read access to events and restricts write access to authenticated users.
-     * @path /events/{eventId}
-     * @allow (get, list): Anyone can read event data.
-     * @allow (create, update, delete): Only authenticated users can modify event data.
-     * @deny (create, update, delete): Unauthenticated users cannot modify event data.
-     * @principle Public read, authenticated write.
-     */
+    // Allow public read access to events, blog_posts, members, and penas
     match /events/{eventId} {
-      allow get, list: if true;
-      allow create: if isSignedIn();
-      allow update: if isSignedIn() && resource != null;
-      allow delete: if isSignedIn() && resource != null;
+      allow read: if true;
+      allow write: if request.auth != null; // Only authenticated users can write
     }
 
-    /**
-     * @description Allows public read access to members and restricts write access to authenticated users.
-     * @path /members/{memberId}
-     * @allow (get, list): Anyone can read member data.
-     * @allow (create, update, delete): Only authenticated users can modify member data.
-     * @deny (create, update, delete): Unauthenticated users cannot modify member data.
-     * @principle Public read, authenticated write.
-     */
+    match /blog_posts/{postId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
     match /members/{memberId} {
-      allow get, list: if true;
-      allow create: if isSignedIn();
-      allow update: if isSignedIn() && resource != null;
-      allow delete: if isSignedIn() && resource != null;
+      allow read: if true;
+      allow write: if request.auth != null;
     }
 
-    /**
-     * @description Allows public read access to blog posts and restricts write access to authenticated users.
-     * @path /blog_posts/{blogPostId}
-     * @allow (get, list): Anyone can read blog post data.
-     * @allow (create, update, delete): Only authenticated users can modify blog post data.
-     * @deny (create, update, delete): Unauthenticated users cannot modify blog post data.
-     * @principle Public read, authenticated write.
-     */
-    match /blog_posts/{blogPostId} {
-      allow get, list: if true;
-      allow create: if isSignedIn();
-      allow update: if isSignedIn() && resource != null;
-      allow delete: if isSignedIn() && resource != null;
+    match /penas/{penaId} {
+      allow read: if true;
+      allow write: if request.auth != null;
     }
 
-    /**
-     * @description Checks if the user is signed in.
-     * @return True if the user is signed in, false otherwise.
-     */
-    function isSignedIn() {
-      return request.auth != null;
+    // Default deny for any other collection
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
