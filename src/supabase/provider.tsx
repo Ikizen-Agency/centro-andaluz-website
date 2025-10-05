@@ -5,7 +5,7 @@ import { type SupabaseClient, getSupabaseBrowserClient } from './client';
 import type { Session, User } from '@supabase/supabase-js';
 
 type SupabaseContextValue = {
-  client: SupabaseClient;
+  client: SupabaseClient | null;
   user: User | null;
   session: Session | null;
   isUserLoading: boolean;
@@ -14,12 +14,21 @@ type SupabaseContextValue = {
 const SupabaseContext = createContext<SupabaseContextValue | undefined>(undefined);
 
 export function SupabaseProvider({ children }: { children: React.ReactNode }) {
-  const client = useMemo(() => getSupabaseBrowserClient(), []);
+  const client = useMemo(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      return getSupabaseBrowserClient();
+    } catch {
+      // Env vars pueden faltar en build/prerender; evitamos throw aquí.
+      return null;
+    }
+  }, []);
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isUserLoading, setIsUserLoading] = useState(true);
 
   useEffect(() => {
+    if (!client) { setIsUserLoading(false); return; }
     let mounted = true;
     client.auth.getSession().then(({ data }) => {
       if (!mounted) return;
@@ -51,7 +60,13 @@ export function useSupabase() {
 }
 
 export function useSupabaseClient() {
-  return useSupabase().client;
+  const { client } = useSupabase();
+  if (typeof window === 'undefined') {
+    // Durante SSR/prerender devolvemos un objeto vacío que no se usará (useEffect no corre).
+    return {} as unknown as SupabaseClient;
+  }
+  if (!client) throw new Error('Supabase client no inicializado. Verifica tus variables NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY.');
+  return client;
 }
 
 export function useSupabaseUser() {

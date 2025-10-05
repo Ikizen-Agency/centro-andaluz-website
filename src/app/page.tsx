@@ -2,6 +2,7 @@
 'use client';
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Calendar, Feather, Utensils, Music, Users, Palette } from "lucide-react";
@@ -216,3 +217,46 @@ export default function HomePage() {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Centro Andaluz de la Habana | Cultura, Eventos y Comunidad",
+  description:
+    "Preservamos y promovemos la cultura andaluza en La Habana. Descubre eventos, peñas culturales, artículos y actividades comunitarias.",
+  keywords: [
+    "Andalucía",
+    "La Habana",
+    "Cuba",
+    "cultura andaluza",
+    "flamenco",
+    "peñas",
+    "eventos",
+    "comunidad",
+  ],
+  openGraph: {
+    title: "Centro Andaluz de la Habana",
+    description:
+      "Eventos, peñas y cultura andaluza en La Habana. Únete a nuestras actividades.",
+    url: "https://centro-andaluz.example/",
+    siteName: "Centro Andaluz de la Habana",
+    locale: "es_ES",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Centro Andaluz de la Habana",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Centro Andaluz de la Habana",
+    description:
+      "Descubre la agenda cultural andaluza en La Habana: eventos, peñas y más.",
+    images: ["/og-image.jpg"],
+  },
+  alternates: {
+    canonical: "https://centro-andaluz.example/",
+  },
+};
