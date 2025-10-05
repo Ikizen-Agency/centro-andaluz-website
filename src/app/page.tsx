@@ -2,7 +2,6 @@
 'use client';
 import Image from "next/image";
 import Link from "next/link";
-import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Calendar, Feather, Utensils, Music, Users, Palette } from "lucide-react";
@@ -218,7 +217,9 @@ export default function HomePage() {
   );
 }
 
-export const metadata: Metadata = {
+// Nota: metadata no puede exportarse desde un componente client.
+// Muévelo a src/app/layout.tsx o convierte esta página a server si deseas metadata por página.
+/* export const metadata: Metadata = {
   title: "Centro Andaluz de la Habana | Cultura, Eventos y Comunidad",
   description:
     "Preservamos y promovemos la cultura andaluza en La Habana. Descubre eventos, peñas culturales, artículos y actividades comunitarias.",
@@ -259,4 +260,4 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://centro-andaluz.example/",
   },
-};
+}; */

@@ -17,6 +17,7 @@ export function useSupabaseSelect<T = any>(
   options: SelectOptions = {}
 ): { data: T[] | T | null; isLoading: boolean; error: Error | null; refetch: () => Promise<void> } {
   const client = useSupabaseClient();
+  const isBrowser = typeof window !== 'undefined';
   const { columns = '*', eq = [], order, single = false, keepPreviousData = true } = options;
   const [data, setData] = useState<T[] | T | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -24,6 +25,10 @@ export function useSupabaseSelect<T = any>(
   const [hasData, setHasData] = useState<boolean>(false);
 
   const run = useCallback(async (sb: SupabaseClient, tbl: string) => {
+    // Skip during SSR/prerender
+    if (!isBrowser) { setIsLoading(false); return; }
+    // If client is a stub without from(), skip
+    if (!sb || typeof (sb as any).from !== 'function') { setIsLoading(false); return; }
     setIsLoading(!(keepPreviousData && hasData));
     setError(null);
     try {
@@ -44,7 +49,7 @@ export function useSupabaseSelect<T = any>(
     } finally {
       setIsLoading(false);
     }
-  }, [columns, eq, order, single, keepPreviousData, hasData]);
+  }, [columns, eq, order, single, keepPreviousData, hasData, isBrowser]);
 
   const refetch = useCallback(async () => {
     if (!table) return;
