@@ -14,7 +14,9 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function ArticlesPage() {
     const [posts, setPosts] = useState<Post[]>([]);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [selectedPost, setSelectedPost] = useState<Post | null>(null);
     const { toast } = useToast();
 
     useEffect(() => {
@@ -35,11 +37,16 @@ export default function ArticlesPage() {
         });
     };
 
+    const handleRowClick = (post: Post) => {
+        setSelectedPost(post);
+        setIsDetailOpen(true);
+    };
+
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Artículos del Blog</h1>
-                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                 <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                     <DialogTrigger asChild>
                         <Button>
                             <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nuevo Artículo
@@ -75,11 +82,11 @@ export default function ArticlesPage() {
                         </TableHeader>
                         <TableBody>
                             {posts.map((post) => (
-                                <TableRow key={post.slug}>
+                                <TableRow key={post.slug} onClick={() => handleRowClick(post)} className="cursor-pointer">
                                     <TableCell className="font-medium">{post.title}</TableCell>
                                     <TableCell>{post.author}</TableCell>
                                     <TableCell>{post.date}</TableCell>
-                                    <TableCell className="text-right space-x-2">
+                                    <TableCell className="text-right space-x-2" onClick={(e) => e.stopPropagation()}>
                                         <Button variant="outline" size="sm">Editar</Button>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
@@ -109,6 +116,39 @@ export default function ArticlesPage() {
                     </Table>
                 </CardContent>
             </Card>
+
+            <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
+                <DialogContent className="sm:max-w-3xl max-h-[90vh] flex flex-col">
+                    {selectedPost && (
+                        <>
+                            <DialogHeader>
+                                <DialogTitle>{selectedPost.title}</DialogTitle>
+                                <DialogDescription>Por {selectedPost.author} el {selectedPost.date}</DialogDescription>
+                            </DialogHeader>
+                            <div className="flex-1 overflow-y-auto pr-4 -mr-4 space-y-4">
+                                <div>
+                                    <h3 className="font-semibold">Descripción</h3>
+                                    <p className="text-sm text-muted-foreground">{selectedPost.description}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold">Slug</h3>
+                                    <p className="text-sm text-muted-foreground">{selectedPost.slug}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold">ID de Imagen</h3>
+                                    <p className="text-sm text-muted-foreground">{selectedPost.image}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold">Contenido (Componente)</h3>
+                                    <div className="mt-2 p-4 bg-secondary rounded-md text-sm text-muted-foreground">
+                                       El contenido completo es un componente de React y no se puede mostrar aquí directamente.
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

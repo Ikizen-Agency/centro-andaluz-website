@@ -13,8 +13,10 @@ import type { Event } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 
 export default function EventsPage() {
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [events, setEvents] = useState<Event[]>(initialEvents);
+    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
     const { toast } = useToast();
 
     const handleDelete = (slug: string) => {
@@ -24,12 +26,17 @@ export default function EventsPage() {
             description: "El evento ha sido eliminado con éxito (simulación)."
         });
     };
+    
+    const handleRowClick = (event: Event) => {
+        setSelectedEvent(event);
+        setIsDetailOpen(true);
+    };
 
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Eventos</h1>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                     <DialogTrigger asChild>
                         <Button>
                             <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nuevo Evento
@@ -65,11 +72,11 @@ export default function EventsPage() {
                         </TableHeader>
                         <TableBody>
                             {events.map((event) => (
-                                <TableRow key={event.slug}>
+                                <TableRow key={event.slug} onClick={() => handleRowClick(event)} className="cursor-pointer">
                                     <TableCell className="font-medium">{event.title}</TableCell>
                                     <TableCell>{event.date}</TableCell>
                                     <TableCell>{event.location}</TableCell>
-                                    <TableCell className="text-right space-x-2">
+                                    <TableCell className="text-right space-x-2" onClick={(e) => e.stopPropagation()}>
                                         <Button variant="outline" size="sm">Editar</Button>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
@@ -99,6 +106,45 @@ export default function EventsPage() {
                     </Table>
                 </CardContent>
             </Card>
+
+             <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
+                <DialogContent className="sm:max-w-3xl max-h-[90vh] flex flex-col">
+                    {selectedEvent && (
+                        <>
+                            <DialogHeader>
+                                <DialogTitle>{selectedEvent.title}</DialogTitle>
+                                <DialogDescription>{selectedEvent.date} - {selectedEvent.location}</DialogDescription>
+                            </DialogHeader>
+                            <div className="flex-1 overflow-y-auto pr-4 -mr-4 space-y-4">
+                                <div>
+                                    <h3 className="font-semibold">Descripción Corta</h3>
+                                    <p className="text-sm text-muted-foreground">{selectedEvent.description}</p>
+                                </div>
+                                 <div>
+                                    <h3 className="font-semibold">Descripción Larga</h3>
+                                    <p className="text-sm text-muted-foreground whitespace-pre-line">{selectedEvent.longDescription}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold">Slug</h3>
+                                    <p className="text-sm text-muted-foreground">{selectedEvent.slug}</p>
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold">ID de Imagen</h3>
+                                    <p className="text-sm text-muted-foreground">{selectedEvent.image}</p>
+                                </div>
+                                 {selectedEvent.artists && selectedEvent.artists.length > 0 && (
+                                    <div>
+                                        <h3 className="font-semibold">Artistas</h3>
+                                        <ul className="text-sm text-muted-foreground list-disc pl-5">
+                                            {selectedEvent.artists.map(artist => <li key={artist.name}>{artist.name} ({artist.instrument})</li>)}
+                                        </ul>
+                                    </div>
+                                 )}
+                            </div>
+                        </>
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
