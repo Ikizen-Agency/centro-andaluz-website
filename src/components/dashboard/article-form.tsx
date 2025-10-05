@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import type { Post } from "@/lib/types";
 
 const articleFormSchema = z.object({
   title: z.string().min(2, "El título debe tener al menos 2 caracteres."),
@@ -30,8 +32,16 @@ const articleFormSchema = z.object({
 
 type ArticleFormValues = z.infer<typeof articleFormSchema>
 
-export function ArticleForm() {
+interface ArticleFormProps {
+    initialData?: Post | null;
+    onSave?: () => void;
+    onCancel?: () => void;
+}
+
+export function ArticleForm({ initialData, onSave, onCancel }: ArticleFormProps) {
   const { toast } = useToast();
+  const isEditMode = !!initialData;
+
   const form = useForm<ArticleFormValues>({
     resolver: zodResolver(articleFormSchema),
     defaultValues: {
@@ -43,15 +53,34 @@ export function ArticleForm() {
       description: "",
       content: "",
     },
-  })
+  });
+
+  useEffect(() => {
+    if (isEditMode && initialData) {
+      form.reset({
+        title: initialData.title,
+        slug: initialData.slug,
+        author: initialData.author,
+        date: initialData.date,
+        description: initialData.description,
+        content: "El contenido es un componente React y no se puede editar aquí.",
+        image: initialData.image,
+      });
+    }
+  }, [initialData, isEditMode, form]);
 
   function onSubmit(data: ArticleFormValues) {
     console.log(data); // In a real app, you'd send this to a server
     toast({
-      title: "Artículo Enviado",
-      description: `El nuevo artículo "${data.title}" ha sido creado (simulación).`,
+      title: isEditMode ? "Artículo Actualizado" : "Artículo Creado",
+      description: `El artículo "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'} (simulación).`,
     })
-    form.reset();
+    
+    if (onSave) {
+        onSave();
+    } else {
+        form.reset();
+    }
   }
 
   return (
@@ -77,9 +106,9 @@ export function ArticleForm() {
             <FormItem>
               <FormLabel>Slug</FormLabel>
               <FormControl>
-                <Input placeholder="ej. el-arte-del-flamenco" {...field} />
+                <Input placeholder="ej. el-arte-del-flamenco" {...field} disabled={isEditMode} />
               </FormControl>
-              <FormDescription>Este será el nombre del archivo y la URL del artículo.</FormDescription>
+              <FormDescription>Este será el nombre del archivo y la URL del artículo. No se puede cambiar después de la creación.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -121,7 +150,7 @@ export function ArticleForm() {
               <FormControl>
                 <Input type="file" {...form.register("image")} />
               </FormControl>
-              <FormDescription>Sube la imagen principal para el artículo.</FormDescription>
+              <FormDescription>Sube la imagen principal para el artículo. {isEditMode && "Dejar en blanco para mantener la imagen actual."}</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -146,14 +175,17 @@ export function ArticleForm() {
             <FormItem>
               <FormLabel>Contenido Completo del Artículo (TSX)</FormLabel>
               <FormControl>
-                <Textarea placeholder="Escribe el contenido del artículo aquí. Puedes usar sintaxis TSX." rows={15} {...field} />
+                <Textarea placeholder="Escribe el contenido del artículo aquí. Puedes usar sintaxis TSX." rows={15} {...field} disabled={isEditMode}/>
               </FormControl>
-              <FormDescription>Este contenido se renderizará dentro de la página del post del blog. Puedes usar divs, párrafos, etc.</FormDescription>
+              <FormDescription>Este contenido se renderizará dentro de la página del post del blog. No se puede editar después de la creación.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Crear Artículo</Button>
+        <div className="flex justify-end space-x-4">
+            {onCancel && <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>}
+            <Button type="submit">{isEditMode ? 'Guardar Cambios' : 'Crear Artículo'}</Button>
+        </div>
       </form>
     </Form>
   )

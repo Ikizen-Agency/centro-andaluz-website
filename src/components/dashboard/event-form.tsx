@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import type { Event } from "@/lib/types"
 
 const eventFormSchema = z.object({
   title: z.string().min(2, "El título debe tener al menos 2 caracteres.").max(100, "El título debe tener menos de 100 caracteres."),
@@ -30,8 +32,16 @@ const eventFormSchema = z.object({
 
 type EventFormValues = z.infer<typeof eventFormSchema>
 
-export function EventForm() {
+interface EventFormProps {
+    initialData?: Event | null;
+    onSave?: () => void;
+    onCancel?: () => void;
+}
+
+export function EventForm({ initialData, onSave, onCancel }: EventFormProps) {
   const { toast } = useToast();
+  const isEditMode = !!initialData;
+
   const form = useForm<EventFormValues>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
@@ -45,13 +55,27 @@ export function EventForm() {
     },
   })
 
+  useEffect(() => {
+    if (isEditMode && initialData) {
+      form.reset({
+        ...initialData,
+        image: "",
+      });
+    }
+  }, [initialData, isEditMode, form]);
+
   function onSubmit(data: EventFormValues) {
     console.log(data); // In a real app, you'd send this to a server
     toast({
-      title: "Evento Enviado",
-      description: "El nuevo evento ha sido creado (simulación).",
+      title: isEditMode ? "Evento Actualizado" : "Evento Creado",
+      description: `El evento "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'} (simulación).`,
     })
-    form.reset();
+    
+    if (onSave) {
+        onSave();
+    } else {
+        form.reset();
+    }
   }
 
   return (
@@ -77,9 +101,9 @@ export function EventForm() {
             <FormItem>
               <FormLabel>Slug</FormLabel>
               <FormControl>
-                <Input placeholder="ej. noche-de-flamenco-habana" {...field} />
+                <Input placeholder="ej. noche-de-flamenco-habana" {...field} disabled={isEditMode} />
               </FormControl>
-              <FormDescription>Esta es la versión del título amigable para URLs.</FormDescription>
+              <FormDescription>Esta es la versión del título amigable para URLs. No se puede cambiar después de la creación.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -145,12 +169,15 @@ export function EventForm() {
               <FormControl>
                  <Input type="file" {...form.register("image")} />
               </FormControl>
-               <FormDescription>Sube la imagen principal para el evento.</FormDescription>
+               <FormDescription>Sube la imagen principal para el evento. {isEditMode && "Dejar en blanco para mantener la imagen actual."}</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Crear Evento</Button>
+        <div className="flex justify-end space-x-4">
+            {onCancel && <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>}
+            <Button type="submit">{isEditMode ? 'Guardar Cambios' : 'Crear Evento'}</Button>
+        </div>
       </form>
     </Form>
   )

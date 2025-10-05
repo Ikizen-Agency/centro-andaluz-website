@@ -14,7 +14,8 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function ArticlesPage() {
     const [posts, setPosts] = useState<Post[]>([]);
-    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+    const [isEditFormOpen, setIsEditFormOpen] = useState(false);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
     const { toast } = useToast();
@@ -28,13 +29,16 @@ export default function ArticlesPage() {
     }, []);
 
     const handleDelete = (slug: string) => {
-        // In a real app, you'd call an API to delete the post.
-        // Here, we'll just simulate it by filtering the state.
         setPosts(posts.filter(p => p.slug !== slug));
         toast({
             title: "Artículo Eliminado",
             description: "El artículo ha sido eliminado con éxito (simulación)."
         });
+    };
+    
+    const handleEditClick = (post: Post) => {
+        setSelectedPost(post);
+        setIsEditFormOpen(true);
     };
 
     const handleRowClick = (post: Post) => {
@@ -42,25 +46,31 @@ export default function ArticlesPage() {
         setIsDetailOpen(true);
     };
 
+    const handleFormSuccess = () => {
+        setIsCreateFormOpen(false);
+        setIsEditFormOpen(false);
+        // Here you would typically refetch the data
+    };
+
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Artículos del Blog</h1>
-                 <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                 <Dialog open={isCreateFormOpen} onOpenChange={setIsCreateFormOpen}>
                     <DialogTrigger asChild>
                         <Button>
                             <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nuevo Artículo
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
+                    <DialogContent className="sm:max-w-4xl">
                         <DialogHeader>
                             <DialogTitle>Crear un Nuevo Artículo de Blog</DialogTitle>
                             <DialogDescription>
                                 Completa el siguiente formulario para añadir un nuevo artículo al blog.
                             </DialogDescription>
                         </DialogHeader>
-                        <div className="flex-1 overflow-y-auto pr-4 -mr-4">
-                            <ArticleForm />
+                        <div className="overflow-y-auto pr-4 -mr-4 max-h-[70vh]">
+                            <ArticleForm onSave={handleFormSuccess} />
                         </div>
                     </DialogContent>
                 </Dialog>
@@ -87,12 +97,12 @@ export default function ArticlesPage() {
                                     <TableCell>{post.author}</TableCell>
                                     <TableCell>{post.date}</TableCell>
                                     <TableCell className="text-right space-x-2" onClick={(e) => e.stopPropagation()}>
-                                        <Button variant="outline" size="sm">
+                                        <Button variant="outline" size="icon" onClick={() => handleEditClick(post)}>
                                             <Pencil className="h-4 w-4" />
                                         </Button>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="destructive" size="sm">
+                                                <Button variant="destructive" size="icon">
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
                                             </AlertDialogTrigger>
@@ -120,14 +130,14 @@ export default function ArticlesPage() {
             </Card>
 
             <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-                <DialogContent className="sm:max-w-3xl max-h-[90vh] flex flex-col">
+                <DialogContent className="sm:max-w-3xl">
                     {selectedPost && (
                         <>
                             <DialogHeader>
                                 <DialogTitle>{selectedPost.title}</DialogTitle>
                                 <DialogDescription>Por {selectedPost.author} el {selectedPost.date}</DialogDescription>
                             </DialogHeader>
-                            <div className="flex-1 overflow-y-auto pr-4 -mr-4 space-y-4">
+                            <div className="overflow-y-auto pr-4 -mr-4 space-y-4 max-h-[70vh]">
                                 <div>
                                     <h3 className="font-semibold">Descripción</h3>
                                     <p className="text-sm text-muted-foreground">{selectedPost.description}</p>
@@ -149,6 +159,24 @@ export default function ArticlesPage() {
                             </div>
                         </>
                     )}
+                </DialogContent>
+            </Dialog>
+
+             <Dialog open={isEditFormOpen} onOpenChange={setIsEditFormOpen}>
+                <DialogContent className="sm:max-w-4xl">
+                    <DialogHeader>
+                        <DialogTitle>Editar Artículo</DialogTitle>
+                        <DialogDescription>
+                           Modifica los datos del artículo. Haz clic en guardar cuando hayas terminado.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="overflow-y-auto pr-4 -mr-4 max-h-[70vh]">
+                        <ArticleForm 
+                            initialData={selectedPost} 
+                            onSave={handleFormSuccess} 
+                            onCancel={() => setIsEditFormOpen(false)}
+                        />
+                    </div>
                 </DialogContent>
             </Dialog>
         </div>

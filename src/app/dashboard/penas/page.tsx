@@ -13,7 +13,8 @@ import type { Pena } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 
 export default function PenasPage() {
-    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+    const [isEditFormOpen, setIsEditFormOpen] = useState(false);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [penas, setPenas] = useState<Pena[]>(initialPenas);
     const [selectedPena, setSelectedPena] = useState<Pena | null>(null);
@@ -27,30 +28,41 @@ export default function PenasPage() {
         });
     };
 
+    const handleEditClick = (pena: Pena) => {
+        setSelectedPena(pena);
+        setIsEditFormOpen(true);
+    };
+
     const handleRowClick = (pena: Pena) => {
         setSelectedPena(pena);
         setIsDetailOpen(true);
+    };
+
+    const handleFormSuccess = () => {
+        setIsCreateFormOpen(false);
+        setIsEditFormOpen(false);
+        // Here you would typically refetch the data
     };
 
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Peñas Culturales</h1>
-                 <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                 <Dialog open={isCreateFormOpen} onOpenChange={setIsCreateFormOpen}>
                     <DialogTrigger asChild>
                         <Button>
                             <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nueva Peña
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
+                    <DialogContent className="sm:max-w-4xl">
                         <DialogHeader>
                             <DialogTitle>Crear una Nueva Peña</DialogTitle>
                             <DialogDescription>
                                 Completa el siguiente formulario para añadir una nueva peña cultural.
                             </DialogDescription>
                         </DialogHeader>
-                        <div className="flex-1 overflow-y-auto pr-4 -mr-4">
-                            <PenaForm />
+                        <div className="overflow-y-auto pr-4 -mr-4 max-h-[70vh]">
+                            <PenaForm onSave={handleFormSuccess} />
                         </div>
                     </DialogContent>
                 </Dialog>
@@ -75,12 +87,12 @@ export default function PenasPage() {
                                     <TableCell className="font-medium">{pena.title}</TableCell>
                                     <TableCell>{pena.day}</TableCell>
                                     <TableCell className="text-right space-x-2" onClick={(e) => e.stopPropagation()}>
-                                        <Button variant="outline" size="sm">
+                                        <Button variant="outline" size="icon" onClick={() => handleEditClick(pena)}>
                                             <Pencil className="h-4 w-4" />
                                         </Button>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="destructive" size="sm">
+                                                <Button variant="destructive" size="icon">
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
                                             </AlertDialogTrigger>
@@ -108,14 +120,14 @@ export default function PenasPage() {
             </Card>
 
              <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-                <DialogContent className="sm:max-w-3xl max-h-[90vh] flex flex-col">
+                <DialogContent className="sm:max-w-3xl">
                     {selectedPena && (
                         <>
                             <DialogHeader>
                                 <DialogTitle>{selectedPena.title}</DialogTitle>
                                 <DialogDescription>{selectedPena.day}</DialogDescription>
                             </DialogHeader>
-                            <div className="flex-1 overflow-y-auto pr-4 -mr-4 space-y-4">
+                            <div className="overflow-y-auto pr-4 -mr-4 space-y-4 max-h-[70vh]">
                                 <div>
                                     <h3 className="font-semibold">Descripción Corta</h3>
                                     <p className="text-sm text-muted-foreground">{selectedPena.description}</p>
@@ -142,6 +154,24 @@ export default function PenasPage() {
                             </div>
                         </>
                     )}
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={isEditFormOpen} onOpenChange={setIsEditFormOpen}>
+                <DialogContent className="sm:max-w-4xl">
+                    <DialogHeader>
+                        <DialogTitle>Editar Peña Cultural</DialogTitle>
+                        <DialogDescription>
+                           Modifica los datos de la peña. Haz clic en guardar cuando hayas terminado.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="overflow-y-auto pr-4 -mr-4 max-h-[70vh]">
+                        <PenaForm 
+                            initialData={selectedPena} 
+                            onSave={handleFormSuccess}
+                            onCancel={() => setIsEditFormOpen(false)}
+                        />
+                    </div>
                 </DialogContent>
             </Dialog>
         </div>

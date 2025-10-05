@@ -13,7 +13,8 @@ import type { Event } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 
 export default function EventsPage() {
-    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+    const [isEditFormOpen, setIsEditFormOpen] = useState(false);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [events, setEvents] = useState<Event[]>(initialEvents);
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -27,30 +28,41 @@ export default function EventsPage() {
         });
     };
     
+    const handleEditClick = (event: Event) => {
+        setSelectedEvent(event);
+        setIsEditFormOpen(true);
+    };
+
     const handleRowClick = (event: Event) => {
         setSelectedEvent(event);
         setIsDetailOpen(true);
+    };
+
+    const handleFormSuccess = () => {
+        setIsCreateFormOpen(false);
+        setIsEditFormOpen(false);
+        // Here you would typically refetch the data
     };
 
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Eventos</h1>
-                <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+                <Dialog open={isCreateFormOpen} onOpenChange={setIsCreateFormOpen}>
                     <DialogTrigger asChild>
                         <Button>
                             <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nuevo Evento
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
+                    <DialogContent className="sm:max-w-4xl">
                         <DialogHeader>
                             <DialogTitle>Crear un Nuevo Evento</DialogTitle>
                             <DialogDescription>
                                 Completa el siguiente formulario para añadir un nuevo evento al sitio web.
                             </DialogDescription>
                         </DialogHeader>
-                        <div className="flex-1 overflow-y-auto pr-4 -mr-4">
-                            <EventForm />
+                        <div className="overflow-y-auto pr-4 -mr-4 max-h-[70vh]">
+                            <EventForm onSave={handleFormSuccess} />
                         </div>
                     </DialogContent>
                 </Dialog>
@@ -77,12 +89,12 @@ export default function EventsPage() {
                                     <TableCell>{event.date}</TableCell>
                                     <TableCell>{event.location}</TableCell>
                                     <TableCell className="text-right space-x-2" onClick={(e) => e.stopPropagation()}>
-                                        <Button variant="outline" size="sm">
+                                        <Button variant="outline" size="icon" onClick={() => handleEditClick(event)}>
                                             <Pencil className="h-4 w-4" />
                                         </Button>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="destructive" size="sm">
+                                                <Button variant="destructive" size="icon">
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
                                             </AlertDialogTrigger>
@@ -110,14 +122,14 @@ export default function EventsPage() {
             </Card>
 
              <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-                <DialogContent className="sm:max-w-3xl max-h-[90vh] flex flex-col">
+                <DialogContent className="sm:max-w-3xl">
                     {selectedEvent && (
                         <>
                             <DialogHeader>
                                 <DialogTitle>{selectedEvent.title}</DialogTitle>
                                 <DialogDescription>{selectedEvent.date} - {selectedEvent.location}</DialogDescription>
                             </DialogHeader>
-                            <div className="flex-1 overflow-y-auto pr-4 -mr-4 space-y-4">
+                            <div className="overflow-y-auto pr-4 -mr-4 space-y-4 max-h-[70vh]">
                                 <div>
                                     <h3 className="font-semibold">Descripción Corta</h3>
                                     <p className="text-sm text-muted-foreground">{selectedEvent.description}</p>
@@ -145,6 +157,24 @@ export default function EventsPage() {
                             </div>
                         </>
                     )}
+                </DialogContent>
+            </Dialog>
+
+             <Dialog open={isEditFormOpen} onOpenChange={setIsEditFormOpen}>
+                <DialogContent className="sm:max-w-4xl">
+                    <DialogHeader>
+                        <DialogTitle>Editar Evento</DialogTitle>
+                        <DialogDescription>
+                           Modifica los datos del evento. Haz clic en guardar cuando hayas terminado.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="overflow-y-auto pr-4 -mr-4 max-h-[70vh]">
+                        <EventForm 
+                            initialData={selectedEvent} 
+                            onSave={handleFormSuccess} 
+                            onCancel={() => setIsEditFormOpen(false)}
+                        />
+                    </div>
                 </DialogContent>
             </Dialog>
         </div>

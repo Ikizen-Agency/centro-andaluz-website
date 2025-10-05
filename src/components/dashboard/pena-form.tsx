@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import type { Pena } from "@/lib/types"
 
 const penaFormSchema = z.object({
   title: z.string().min(2, "El título debe tener al menos 2 caracteres."),
@@ -30,8 +32,16 @@ const penaFormSchema = z.object({
 
 type PenaFormValues = z.infer<typeof penaFormSchema>
 
-export function PenaForm() {
+interface PenaFormProps {
+    initialData?: Pena | null;
+    onSave?: () => void;
+    onCancel?: () => void;
+}
+
+export function PenaForm({ initialData, onSave, onCancel }: PenaFormProps) {
   const { toast } = useToast();
+  const isEditMode = !!initialData;
+
   const form = useForm<PenaFormValues>({
     resolver: zodResolver(penaFormSchema),
     defaultValues: {
@@ -45,13 +55,28 @@ export function PenaForm() {
     },
   })
 
+  useEffect(() => {
+    if (isEditMode && initialData) {
+      form.reset({
+        ...initialData,
+        icon: initialData.icon.displayName || initialData.icon.name, // Convert icon component to string
+        image: "",
+      });
+    }
+  }, [initialData, isEditMode, form]);
+
   function onSubmit(data: PenaFormValues) {
     console.log(data); // In a real app, you'd send this to a server
     toast({
-      title: "Peña Enviada",
-      description: "La nueva peña ha sido creada (simulación).",
+      title: isEditMode ? "Peña Actualizada" : "Peña Creada",
+      description: `La peña "${data.title}" ha sido ${isEditMode ? 'actualizada' : 'creada'} (simulación).`,
     })
-    form.reset();
+    
+    if (onSave) {
+        onSave();
+    } else {
+        form.reset();
+    }
   }
 
   return (
@@ -77,9 +102,9 @@ export function PenaForm() {
             <FormItem>
               <FormLabel>ID</FormLabel>
               <FormControl>
-                <Input placeholder="ej. pena-flamenca" {...field} />
+                <Input placeholder="ej. pena-flamenca" {...field} disabled={isEditMode} />
               </FormControl>
-              <FormDescription>Este es el identificador único y el slug para la URL.</FormDescription>
+              <FormDescription>Este es el identificador único y el slug para la URL. No se puede cambiar después de la creación.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -132,6 +157,7 @@ export function PenaForm() {
               <FormControl>
                 <Input placeholder="ej. Music, BookOpen (de lucide-react)" {...field} />
               </FormControl>
+              <FormDescription>Busca un icono en lucide-react.dev y pega su nombre aquí (ej. 'Music').</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -145,12 +171,15 @@ export function PenaForm() {
               <FormControl>
                 <Input type="file" {...form.register("image")} />
               </FormControl>
-              <FormDescription>Sube la imagen principal para la peña.</FormDescription>
+              <FormDescription>Sube la imagen principal para la peña. {isEditMode && "Dejar en blanco para mantener la imagen actual."}</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Crear Peña</Button>
+        <div className="flex justify-end space-x-4">
+            {onCancel && <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>}
+            <Button type="submit">{isEditMode ? 'Guardar Cambios' : 'Crear Peña'}</Button>
+        </div>
       </form>
     </Form>
   )
