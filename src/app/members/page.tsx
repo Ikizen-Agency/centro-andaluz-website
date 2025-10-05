@@ -1,7 +1,8 @@
+
 import type { Metadata } from 'next';
 import { members } from '@/lib/members';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Card, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 
 export const metadata: Metadata = {
@@ -17,10 +18,11 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
   </section>
 );
 
-const MemberCard = ({ name, role }: { name: string; role: string }) => (
+const MemberCard = ({ name, role, id }: { name: string; role: string, id: number }) => (
   <Card className="text-center p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col justify-center">
     <CardContent className="p-0 flex flex-col items-center">
       <Avatar className="h-24 w-24 mx-auto mb-4 border-4 border-primary/20">
+        <AvatarImage src={`https://picsum.photos/seed/${id}/200/200`} alt={`Foto de ${name}`} data-ai-hint="person portrait" />
         <AvatarFallback className="text-3xl bg-muted">{name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
       </Avatar>
       <h3 className="text-lg font-bold !font-headline">{name}</h3>
@@ -48,7 +50,7 @@ export default function MembersPage() {
         <Section title="Junta Directiva">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
             {juntaDirectiva.map((member) => (
-              <MemberCard key={member.id} name={member.name} role={member.role} />
+              <MemberCard key={member.id} name={member.name} role={member.role} id={member.id} />
             ))}
           </div>
         </Section>
@@ -57,7 +59,7 @@ export default function MembersPage() {
            <div className="flex justify-center">
             <div className="w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
                 {comisiones.map((member) => (
-                <MemberCard key={member.id} name={member.name} role={member.role} />
+                <MemberCard key={member.id} name={member.name} role={member.role} id={member.id} />
                 ))}
             </div>
           </div>
@@ -66,7 +68,7 @@ export default function MembersPage() {
         <Section title="Colaboradores">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
             {colaboradores.map((member) => (
-              <MemberCard key={member.id} name={member.name} role={member.role} />
+              <MemberCard key={member.id} name={member.name} role={member.role} id={member.id} />
             ))}
           </div>
         </Section>
