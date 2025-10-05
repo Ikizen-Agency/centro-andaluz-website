@@ -14,6 +14,7 @@ const navLinks = [
   { href: "/events", label: "Eventos" },
   { href: "/culture", label: "Cultura" },
   { href: "/penas", label: "Peñas" },
+  { href: "/members", label: "Miembros" },
   { href: "/blog", label: "Blog" },
 ];
 

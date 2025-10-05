@@ -13,10 +13,12 @@ const footerLinks = [
     { title: "Explorar", links: [
         { label: "Inicio", href: "/" },
         { label: "Eventos", href: "/events" },
+        { label: "Peñas", href: "/penas"},
         { label: "Blog", href: "/blog" },
     ]},
     { title: "Sobre Nosotros", links: [
         { label: "Nuestra Misión", href: "/#about" },
+        { label: "Miembros", href: "/members" },
         { label: "Contáctanos", href: "#" },
     ]},
 ];
