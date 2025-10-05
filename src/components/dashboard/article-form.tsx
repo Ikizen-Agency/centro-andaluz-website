@@ -1,9 +1,14 @@
+
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useEffect } from "react";
+import { format } from "date-fns"
+import { es } from "date-fns/locale"
+import { CalendarIcon } from "lucide-react"
+
 
 import { Button } from "@/components/ui/button"
 import {
@@ -19,12 +24,17 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import type { Post } from "@/lib/types";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 const articleFormSchema = z.object({
   title: z.string().min(2, "El título debe tener al menos 2 caracteres."),
   slug: z.string().min(2, "El slug debe tener al menos 2 caracteres.").regex(/^[a-z0-9-]+$/, "El slug debe estar en minúsculas y con guiones."),
   author: z.string().min(1, "El autor es obligatorio."),
-  date: z.string().min(1, "La fecha es obligatoria."),
+  date: z.date({
+    required_error: "La fecha es obligatoria.",
+  }),
   image: z.any(),
   description: z.string().min(10, "La descripción debe tener al menos 10 caracteres.").max(160, "La descripción debe tener menos de 160 caracteres."),
   content: z.string().min(50, "El contenido debe tener al menos 50 caracteres."),
@@ -38,6 +48,17 @@ interface ArticleFormProps {
     onCancel?: () => void;
 }
 
+const parseDate = (dateStr: string | Date): Date | undefined => {
+  if (dateStr instanceof Date) return dateStr;
+  if (typeof dateStr !== 'string') return undefined;
+  try {
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? undefined : date;
+  } catch {
+    return undefined;
+  }
+}
+
 export function ArticleForm({ initialData, onSave, onCancel }: ArticleFormProps) {
   const { toast } = useToast();
   const isEditMode = !!initialData;
@@ -48,7 +69,6 @@ export function ArticleForm({ initialData, onSave, onCancel }: ArticleFormProps)
       title: "",
       slug: "",
       author: "",
-      date: "",
       image: "",
       description: "",
       content: "",
@@ -61,7 +81,7 @@ export function ArticleForm({ initialData, onSave, onCancel }: ArticleFormProps)
         title: initialData.title,
         slug: initialData.slug,
         author: initialData.author,
-        date: initialData.date,
+        date: parseDate(initialData.date),
         description: initialData.description,
         content: "El contenido es un componente React y no se puede editar aquí.",
         image: initialData.image,
@@ -70,7 +90,10 @@ export function ArticleForm({ initialData, onSave, onCancel }: ArticleFormProps)
   }, [initialData, isEditMode, form]);
 
   function onSubmit(data: ArticleFormValues) {
-    console.log(data); // In a real app, you'd send this to a server
+    console.log({
+        ...data,
+        date: format(data.date, "d 'de' MMMM 'de' yyyy", { locale: es }),
+    }); 
     toast({
       title: isEditMode ? "Artículo Actualizado" : "Artículo Creado",
       description: `El artículo "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'} (simulación).`,
@@ -131,15 +154,44 @@ export function ArticleForm({ initialData, onSave, onCancel }: ArticleFormProps)
             control={form.control}
             name="date"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Fecha</FormLabel>
-                <FormControl>
-                  <Input placeholder="ej. 22 de julio de 2024" {...field} />
-                </FormControl>
+                <FormItem className="flex flex-col">
+                <FormLabel>Fecha de Publicación</FormLabel>
+                <Popover>
+                    <PopoverTrigger asChild>
+                    <FormControl>
+                        <Button
+                        variant={"outline"}
+                        className={cn(
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                        )}
+                        >
+                        {field.value ? (
+                            format(field.value, "PPP", { locale: es })
+                        ) : (
+                            <span>Elige una fecha</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                    </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                        locale={es}
+                    />
+                    </PopoverContent>
+                </Popover>
                 <FormMessage />
-              </FormItem>
+                </FormItem>
             )}
-          />
+            />
         </div>
         <FormField
           control={form.control}
