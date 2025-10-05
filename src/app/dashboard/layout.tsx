@@ -35,14 +35,16 @@ export default function DashboardLayout({
             <SidebarMenu>
                 {navLinks.map((link) => (
                     <SidebarMenuItem key={link.href}>
+                      <Link href={link.href} legacyBehavior passHref>
                         <SidebarMenuButton 
-                            href={link.href} 
                             isActive={pathname === link.href} 
                             tooltip={link.label}
+                            asChild={false}
                         >
                             <link.icon />
                             {link.label}
                         </SidebarMenuButton>
+                      </Link>
                     </SidebarMenuItem>
                 ))}
             </SidebarMenu>
