@@ -1,7 +1,8 @@
 /**
- * @fileoverview Firestore Security Rules for the Centro Andaluz de la Habana application.
+ * @fileOverview Firestore Security Rules for the Centro Andaluz de la Habana application.
  *
- * Core Philosophy: This ruleset prioritizes security by explicitly denying all read and write access to all collections, effectively "locking down" the database. This is done for debugging purposes as per the user's request. No data validation is performed, as the focus is purely on restricting access during this phase.
+ * Core Philosophy:
+ * This ruleset provides public read access to events, members, and blog posts, with no write access granted to any user.
  *
  * Data Structure:
  * - /events/{eventId}: Stores event data.
@@ -9,52 +10,50 @@
  * - /blog_posts/{blogPostId}: Stores blog post data.
  *
  * Key Security Decisions:
- * - ALL read and write access is denied across the board.
+ * - All collections are publicly readable.
+ * - No write operations are permitted, effectively making the data read-only.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Denies all access to event data for debugging.
+     * @description Allows public read access to event documents. No write access is allowed.
      * @path /events/{eventId}
-     * @allow (none)
-     * @deny (any)
-     * @principle Debugging rules in place; no access allowed.
+     * @allow (get, list) User can read any event document.
+     * @deny (create, update, delete) No user can create, update, or delete event documents.
+     * @principle Grants public read access while restricting all write access.
      */
     match /events/{eventId} {
-      allow get: if false;
-      allow list: if false;
+      allow get, list: if true;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
     }
 
     /**
-     * @description Denies all access to member data for debugging.
+     * @description Allows public read access to member documents. No write access is allowed.
      * @path /members/{memberId}
-     * @allow (none)
-     * @deny (any)
-     * @principle Debugging rules in place; no access allowed.
+     * @allow (get, list) User can read any member document.
+     * @deny (create, update, delete) No user can create, update, or delete member documents.
+     * @principle Grants public read access while restricting all write access.
      */
     match /members/{memberId} {
-      allow get: if false;
-      allow list: if false;
+      allow get, list: if true;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
     }
 
     /**
-     * @description Denies all access to blog post data for debugging.
+     * @description Allows public read access to blog post documents. No write access is allowed.
      * @path /blog_posts/{blogPostId}
-     * @allow (none)
-     * @deny (any)
-     * @principle Debugging rules in place; no access allowed.
+     * @allow (get, list) User can read any blog post document.
+     * @deny (create, update, delete) No user can create, update, or delete blog post documents.
+     * @principle Grants public read access while restricting all write access.
      */
     match /blog_posts/{blogPostId} {
-      allow get: if false;
-      allow list: if false;
+      allow get, list: if true;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
