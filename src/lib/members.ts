@@ -1,3 +1,4 @@
+
 import type { Member } from './types';
 
 export const members: Member[] = [
@@ -21,7 +22,7 @@ export const members: Member[] = [
   { id: 13, name: 'Lic. Gloria Días Jiménez', role: 'Periodista de la Revista OPUS HABANA de la OHCH', category: 'Colaboradores' },
   { id: 14, name: 'Leo D´Lázaro', role: 'Escultor, pintor, dibujante, diseñador y fotógrafo', category: 'Colaboradores' },
   { id: 15, name: 'Lic. Mila Roldán Berroa', role: 'Pedagoga, escritora y guionista de televisión', category: 'Colaboradores' },
-  { id: 16, name: 'Est. Patricia Mieres Días', role: 'Programadora', category: 'Colaboradores' },
+  { id: 16, name: 'iKizen', role: 'Agencia de Impulso Digital', category: 'Colaboradores' },
   
   // Colaboración Asociaciones
   { id: 17, name: 'Asociación Andalucia - Cuba: Puente de Cooperación para el Desarrollo Sostenible', role: 'Colaboración', category: 'Colaboración Asociaciones' },
