@@ -1,62 +1,60 @@
 /**
- * @fileOverview Firestore Security Rules for the Centro Andaluz de la Habana application.
+ * @fileoverview Firestore Security Rules for Centro Andaluz de la Habana.
  *
  * Core Philosophy:
- * This ruleset provides public read access to events, members, and blog posts, with no write access granted to any user.
+ * This ruleset prioritizes security by denying all access, effectively disabling read and write operations to the Firestore database.
+ * This is a temporary measure to diagnose a problem, as requested by the user.
  *
  * Data Structure:
- * - /events/{eventId}: Stores event data.
- * - /members/{memberId}: Stores member data.
- * - /blog_posts/{blogPostId}: Stores blog post data.
+ * The Firestore database contains three top-level collections: `events`, `members`, and `blog_posts`.
  *
  * Key Security Decisions:
- * - All collections are publicly readable.
- * - No write operations are allowed through the security rules.  All writes are denied.
+ * All read and write access is explicitly denied. This ensures that no data can be accessed or modified until more specific rules are implemented.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows public read access to events. No write access is granted.
+     * @description Rules for the 'events' collection. ALL ACCESS IS DENIED.
      * @path /events/{eventId}
-     * @allow get, list: Anyone can read event data.
-     * @deny create, update, delete: No one can create, update, or delete event data through the security rules.
-     * @principle Provides public read access.
+     * @allow (none) No operations are allowed.
+     * @deny (any) Any operation will be denied.
+     * @principle Denies all access to diagnose the problem.
      */
     match /events/{eventId} {
-      allow get: if true;
-      allow list: if true;
+      allow get: if false;
+      allow list: if false;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
     }
 
     /**
-     * @description Allows public read access to members. No write access is granted.
+     * @description Rules for the 'members' collection. ALL ACCESS IS DENIED.
      * @path /members/{memberId}
-     * @allow get, list: Anyone can read member data.
-     * @deny create, update, delete: No one can create, update, or delete member data through the security rules.
-     * @principle Provides public read access.
+     * @allow (none) No operations are allowed.
+     * @deny (any) Any operation will be denied.
+     * @principle Denies all access to diagnose the problem.
      */
     match /members/{memberId} {
-      allow get: if true;
-      allow list: if true;
+      allow get: if false;
+      allow list: if false;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
     }
 
     /**
-     * @description Allows public read access to blog posts. No write access is granted.
+     * @description Rules for the 'blog_posts' collection. ALL ACCESS IS DENIED.
      * @path /blog_posts/{blogPostId}
-     * @allow get, list: Anyone can read blog post data.
-     * @deny create, update, delete: No one can create, update, or delete blog post data through the security rules.
-     * @principle Provides public read access.
+     * @allow (none) No operations are allowed.
+     * @deny (any) Any operation will be denied.
+     * @principle Denies all access to diagnose the problem.
      */
     match /blog_posts/{blogPostId} {
-      allow get: if true;
-      allow list: if true;
+      allow get: if false;
+      allow list: if false;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
