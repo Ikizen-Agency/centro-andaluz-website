@@ -11,49 +11,52 @@
  *
  * Key Security Decisions:
  * - All collections are publicly readable.
- * - No write operations are permitted, effectively making the data read-only.
+ * - No write operations are allowed through the security rules.  All writes are denied.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows public read access to event documents. No write access is allowed.
+     * @description Allows public read access to events. No write access is granted.
      * @path /events/{eventId}
-     * @allow (get, list) User can read any event document.
-     * @deny (create, update, delete) No user can create, update, or delete event documents.
-     * @principle Grants public read access while restricting all write access.
+     * @allow get, list: Anyone can read event data.
+     * @deny create, update, delete: No one can create, update, or delete event data through the security rules.
+     * @principle Provides public read access.
      */
     match /events/{eventId} {
-      allow get, list: if true;
+      allow get: if true;
+      allow list: if true;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
     }
 
     /**
-     * @description Allows public read access to member documents. No write access is allowed.
+     * @description Allows public read access to members. No write access is granted.
      * @path /members/{memberId}
-     * @allow (get, list) User can read any member document.
-     * @deny (create, update, delete) No user can create, update, or delete member documents.
-     * @principle Grants public read access while restricting all write access.
+     * @allow get, list: Anyone can read member data.
+     * @deny create, update, delete: No one can create, update, or delete member data through the security rules.
+     * @principle Provides public read access.
      */
     match /members/{memberId} {
-      allow get, list: if true;
+      allow get: if true;
+      allow list: if true;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
     }
 
     /**
-     * @description Allows public read access to blog post documents. No write access is allowed.
+     * @description Allows public read access to blog posts. No write access is granted.
      * @path /blog_posts/{blogPostId}
-     * @allow (get, list) User can read any blog post document.
-     * @deny (create, update, delete) No user can create, update, or delete blog post documents.
-     * @principle Grants public read access while restricting all write access.
+     * @allow get, list: Anyone can read blog post data.
+     * @deny create, update, delete: No one can create, update, or delete blog post data through the security rules.
+     * @principle Provides public read access.
      */
     match /blog_posts/{blogPostId} {
-      allow get, list: if true;
+      allow get: if true;
+      allow list: if true;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
