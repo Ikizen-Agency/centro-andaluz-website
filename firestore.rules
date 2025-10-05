@@ -1,9 +1,7 @@
 /**
- * @fileoverview Firestore Security Rules for Centro Andaluz de la Habana.
+ * @fileoverview Firestore Security Rules for the Centro Andaluz de la Habana application.
  *
- * Core Philosophy:
- * This ruleset allows any authenticated user to read and write any data.
- * This is a prototyping configuration and is not suitable for production use.
+ * Core Philosophy: This ruleset prioritizes security by explicitly denying all read and write access to all collections, effectively "locking down" the database. This is done for debugging purposes as per the user's request. No data validation is performed, as the focus is purely on restricting access during this phase.
  *
  * Data Structure:
  * - /events/{eventId}: Stores event data.
@@ -11,71 +9,55 @@
  * - /blog_posts/{blogPostId}: Stores blog post data.
  *
  * Key Security Decisions:
- * - All reads and writes are allowed for any authenticated user.
+ * - ALL read and write access is denied across the board.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows any authenticated user to read and write event data.
+     * @description Denies all access to event data for debugging.
      * @path /events/{eventId}
-     * @allow (create) - Any authenticated user can create an event.
-     * @allow (update) - Any authenticated user can update an event.
-     * @allow (delete) - Any authenticated user can delete an event.
-     * @allow (get) - Any user can get an event.
-     * @allow (list) - Any user can list events.
-     * @deny (none) - No requests are denied.
-     * @principle Allows any authenticated user to perform any operation on events.
+     * @allow (none)
+     * @deny (any)
+     * @principle Debugging rules in place; no access allowed.
      */
     match /events/{eventId} {
-      allow create: if isSignedIn();
-      allow update: if isSignedIn();
-      allow delete: if isSignedIn();
-      allow get: if true;
-      allow list: if true;
+      allow get: if false;
+      allow list: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Allows any authenticated user to read and write member data.
+     * @description Denies all access to member data for debugging.
      * @path /members/{memberId}
-     * @allow (create) - Any authenticated user can create a member.
-     * @allow (update) - Any authenticated user can update a member.
-     * @allow (delete) - Any authenticated user can delete a member.
-     * @allow (get) - Any user can get a member.
-     * @allow (list) - Any user can list members.
-     * @deny (none) - No requests are denied.
-     * @principle Allows any authenticated user to perform any operation on members.
+     * @allow (none)
+     * @deny (any)
+     * @principle Debugging rules in place; no access allowed.
      */
     match /members/{memberId} {
-      allow create: if isSignedIn();
-      allow update: if isSignedIn();
-      allow delete: if isSignedIn();
-      allow get: if true;
-      allow list: if true;
+      allow get: if false;
+      allow list: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description Allows any authenticated user to read and write blog post data.
+     * @description Denies all access to blog post data for debugging.
      * @path /blog_posts/{blogPostId}
-     * @allow (create) - Any authenticated user can create a blog post.
-     * @allow (update) - Any authenticated user can update a blog post.
-     * @allow (delete) - Any authenticated user can delete a blog post.
-     * @allow (get) - Any user can get a blog post.
-     * @allow (list) - Any user can list blog posts.
-     * @deny (none) - No requests are denied.
-     * @principle Allows any authenticated user to perform any operation on blog posts.
+     * @allow (none)
+     * @deny (any)
+     * @principle Debugging rules in place; no access allowed.
      */
     match /blog_posts/{blogPostId} {
-      allow create: if isSignedIn();
-      allow update: if isSignedIn();
-      allow delete: if isSignedIn();
-      allow get: if true;
-      allow list: if true;
+      allow get: if false;
+      allow list: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
-  }
-
-  function isSignedIn() {
-    return request.auth != null;
   }
 }
