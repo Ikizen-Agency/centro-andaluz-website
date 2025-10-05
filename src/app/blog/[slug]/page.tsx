@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import type { Metadata } from 'next';
-import { getPost, getPosts } from '@/lib/posts';
+import { getPost, getPosts } from '@/lib/posts.tsx';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { members } from '@/lib/members';

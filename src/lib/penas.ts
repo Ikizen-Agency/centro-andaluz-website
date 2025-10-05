@@ -1,16 +1,13 @@
 
 import type { Pena } from './types';
-import { Music, BookOpen, Utensils, Brush, Film, type LucideIcon } from 'lucide-react';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
-import { getSdks } from '@/firebase/server';
+import * as lucideIcons from 'lucide-react';
 
-
-const iconMap: { [key: string]: LucideIcon } = {
-    Music,
-    BookOpen,
-    Utensils,
-    Brush,
-    Film
+const iconMap: { [key: string]: lucideIcons.LucideIcon } = {
+    Music: lucideIcons.Music,
+    BookOpen: lucideIcons.BookOpen,
+    Utensils: lucideIcons.Utensils,
+    Brush: lucideIcons.Brush,
+    Film: lucideIcons.Film
 };
 
 const staticPenas: Pena[] = [
@@ -59,61 +56,17 @@ const staticPenas: Pena[] = [
         icon: 'Film',
         image: 'culture-discovery',
     }
-].map(p => ({ ...p, icon: iconMap[p.icon as string] }));
+].map(p => ({ ...p, icon: iconMap[p.icon as string] || lucideIcons.HelpCircle }));
 
 
-export async function getPenas(): Promise<Pena[]> {
-    try {
-        const { firestore } = await getSdks();
-        const penasCollection = collection(firestore, 'penas');
-        const penasSnapshot = await getDocs(penasCollection);
-        const firestorePenas = penasSnapshot.docs.map(doc => {
-            const data = doc.data();
-            const iconName = data.icon as string;
-            return {
-                ...data,
-                id: doc.id,
-                icon: iconMap[iconName] || Music, // Fallback to a default icon
-            } as Pena;
-        });
-
-        if (firestorePenas.length > 0) {
-            return firestorePenas;
-        }
-        return staticPenas;
-    } catch (error) {
-        console.error("Error fetching penas from Firestore, falling back to static data:", error);
-        return staticPenas;
-    }
+export function getPenas(): Pena[] {
+    return staticPenas.map(p => ({ ...p, icon: iconMap[p.icon as string] || lucideIcons.HelpCircle }));
 }
 
-export async function getPena(id: string): Promise<Pena | undefined> {
-    try {
-        const { firestore } = await getSdks();
-        const penaRef = doc(firestore, 'penas', id);
-        const penaSnap = await getDoc(penaRef);
-
-        if (penaSnap.exists()) {
-            const data = penaSnap.data();
-            const iconName = data.icon as string;
-            return {
-                ...data,
-                id: penaSnap.id,
-                icon: iconMap[iconName] || Music,
-            } as Pena;
-        }
-        const staticPena = staticPenas.find(p => p.id === id);
-        if(staticPena) {
-            return {...staticPena, icon: iconMap[staticPena.icon as string] || Music };
-        }
-        return undefined;
-
-    } catch (error) {
-        console.error("Error fetching pena from Firestore, falling back to static data:", error);
-        const staticPena = staticPenas.find(p => p.id === id);
-        if(staticPena) {
-            return {...staticPena, icon: iconMap[staticPena.icon as string] || Music };
-        }
-        return undefined;
+export function getPena(id: string): Pena | undefined {
+    const pena = staticPenas.find(p => p.id === id);
+    if (pena) {
+        return { ...pena, icon: iconMap[pena.icon as string] || lucideIcons.HelpCircle };
     }
+    return undefined;
 }

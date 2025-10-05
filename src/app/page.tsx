@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Calendar, Feather, Utensils, Music, Users, Palette } from "lucide-react";
 import { getEvents } from "@/lib/events";
-import { getPosts } from "@/lib/posts";
+import { getPosts } from "@/lib/posts.tsx";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import PenasCarousel from "@/components/penas-carousel";
 

@@ -1,17 +1,31 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import * as lucideIcons from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { penas } from '@/lib/penas';
 import { useRef } from 'react';
 import Autoplay from "embla-carousel-autoplay";
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
+import type { Pena } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function PenasCarousel() {
   const plugin = useRef(
     Autoplay({ delay: 5000, stopOnInteraction: true })
   );
+
+  const firestore = useFirestore();
+  const penasCollection = useMemoFirebase(() => collection(firestore, 'penas'), [firestore]);
+  const { data: penas, isLoading } = useCollection<Pena>(penasCollection);
+
+  const getIconComponent = (iconName: string | lucideIcons.LucideIcon) => {
+    if (typeof iconName !== 'string') return iconName as lucideIcons.LucideIcon;
+    const IconComponent = (lucideIcons as any)[iconName];
+    return IconComponent || lucideIcons.HelpCircle;
+  };
 
   return (
     <div className="flex justify-center">
@@ -26,8 +40,25 @@ export default function PenasCarousel() {
         onMouseLeave={plugin.current.reset}
         >
         <CarouselContent>
-            {penas.map((pena) => {
+            {isLoading && Array.from({ length: 3 }).map((_, i) => (
+                <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
+                    <div className="p-1 h-full">
+                        <Card className="overflow-hidden shadow-lg flex flex-col h-full">
+                            <Skeleton className="h-64 w-full" />
+                            <CardHeader>
+                                <Skeleton className="h-8 w-3/4" />
+                            </CardHeader>
+                            <CardContent>
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-5/6 mt-2" />
+                            </CardContent>
+                        </Card>
+                    </div>
+                </CarouselItem>
+            ))}
+            {penas && penas.map((pena) => {
             const penaImage = PlaceHolderImages.find(p => p.id === pena.image);
+            const PenaIcon = getIconComponent(pena.icon);
             return (
                 <CarouselItem key={pena.id} className="md:basis-1/2 lg:basis-1/3">
                     <div className="p-1 h-full">
@@ -45,7 +76,7 @@ export default function PenasCarousel() {
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                                     <div className="absolute bottom-4 left-4">
-                                        <pena.icon className="h-10 w-10 text-white" />
+                                        <PenaIcon className="h-10 w-10 text-white" />
                                     </div>
                                 </div>
                                 )}
@@ -68,5 +99,3 @@ export default function PenasCarousel() {
     </div>
   );
 }
-
-    

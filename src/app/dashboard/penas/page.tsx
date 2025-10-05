@@ -6,26 +6,41 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { PenaForm } from "@/components/dashboard/pena-form";
-import { penas as initialPenas } from "@/lib/penas";
 import { PlusCircle, Trash2, Pencil } from 'lucide-react';
 import { useState } from "react";
 import type { Pena } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
+import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
+import { collection, deleteDoc, doc } from "firebase/firestore";
+import * as lucideIcons from 'lucide-react';
 
 export default function PenasPage() {
     const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
     const [isEditFormOpen, setIsEditFormOpen] = useState(false);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
-    const [penas, setPenas] = useState<Pena[]>(initialPenas);
     const [selectedPena, setSelectedPena] = useState<Pena | null>(null);
     const { toast } = useToast();
+    const firestore = useFirestore();
 
-    const handleDelete = (id: string) => {
-        setPenas(penas.filter(p => p.id !== id));
-        toast({
-            title: "Peña Eliminada",
-            description: "La peña cultural ha sido eliminada con éxito (simulación)."
-        });
+    const penasCollection = useMemoFirebase(() => collection(firestore, "penas"), [firestore]);
+    const { data: penas, isLoading } = useCollection<Pena>(penasCollection);
+
+    const handleDelete = async (id: string) => {
+        if (!id) return;
+        try {
+            await deleteDoc(doc(firestore, "penas", id));
+            toast({
+                title: "Peña Eliminada",
+                description: "La peña cultural ha sido eliminada con éxito."
+            });
+        } catch (error) {
+            console.error("Error deleting pena:", error);
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "No se pudo eliminar la peña."
+            });
+        }
     };
 
     const handleEditClick = (pena: Pena) => {
@@ -41,8 +56,13 @@ export default function PenasPage() {
     const handleFormSuccess = () => {
         setIsCreateFormOpen(false);
         setIsEditFormOpen(false);
-        // Here you would typically refetch the data
     };
+
+    const getIconComponent = (iconName: string | lucideIcons.LucideIcon) => {
+        if (typeof iconName !== 'string') return iconName as lucideIcons.LucideIcon;
+        const IconComponent = (lucideIcons as any)[iconName];
+        return IconComponent || lucideIcons.HelpCircle;
+    }
 
     return (
         <div>
@@ -82,7 +102,8 @@ export default function PenasPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {penas.map((pena) => (
+                            {isLoading && <TableRow><TableCell colSpan={3}>Cargando peñas...</TableCell></TableRow>}
+                            {penas && penas.map((pena) => (
                                 <TableRow key={pena.id} onClick={() => handleRowClick(pena)} className="cursor-pointer">
                                     <TableCell className="font-medium">{pena.title}</TableCell>
                                     <TableCell>{pena.day}</TableCell>
@@ -147,8 +168,8 @@ export default function PenasPage() {
                                 <div>
                                     <h3 className="font-semibold">Icono</h3>
                                     <div className="flex items-center gap-2">
-                                        <selectedPena.icon className="h-5 w-5 text-primary" />
-                                        <p className="text-sm text-muted-foreground">{selectedPena.icon.displayName || selectedPena.icon.name}</p>
+                                        {React.createElement(getIconComponent(selectedPena.icon), { className: "h-5 w-5 text-primary" })}
+                                        <p className="text-sm text-muted-foreground">{typeof selectedPena.icon === 'string' ? selectedPena.icon : selectedPena.icon.name}</p>
                                     </div>
                                 </div>
                             </div>

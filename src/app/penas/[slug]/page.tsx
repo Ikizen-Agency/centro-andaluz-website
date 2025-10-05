@@ -1,49 +1,57 @@
 
+'use client';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import type { Metadata } from 'next';
-import { getPena, getPenas } from '@/lib/penas';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Calendar } from 'lucide-react';
+import { Calendar, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
-
+import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import type { Pena } from '@/lib/types';
+import * as lucideIcons from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type Props = {
   params: { slug: string };
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const pena = await getPena(params.slug);
+export default function PenaDetailPage({ params }: Props) {
+  const firestore = useFirestore();
+  const penaRef = useMemoFirebase(() => doc(firestore, 'penas', params.slug), [firestore, params.slug]);
+  const { data: pena, isLoading } = useDoc<Pena>(penaRef);
 
-  if (!pena) {
-    return {
-      title: 'Peña no encontrada',
-    };
+  if (isLoading) {
+    return (
+        <div className="bg-secondary">
+          <div className="container mx-auto px-4 py-16 md:py-24">
+            <div className="bg-background rounded-lg shadow-xl overflow-hidden max-w-4xl mx-auto">
+                <Skeleton className="h-64 md:h-80 w-full" />
+                <div className="p-6 md:p-8">
+                    <Skeleton className="h-10 w-3/4 mb-6" />
+                    <Skeleton className="h-6 w-1/3 mb-8" />
+                    <Skeleton className="h-5 w-full mb-4" />
+                    <Skeleton className="h-5 w-full mb-4" />
+                    <Skeleton className="h-5 w-3/4" />
+                </div>
+            </div>
+          </div>
+        </div>
+    )
   }
-
-  return {
-    title: `${pena.title} | Peñas Culturales`,
-    description: pena.description,
-  };
-}
-
-export async function generateStaticParams() {
-  const penas = await getPenas();
-  return penas.map((pena) => ({
-    slug: pena.id,
-  }));
-}
-
-export default async function PenaDetailPage({ params }: Props) {
-  const pena = await getPena(params.slug);
 
   if (!pena) {
     notFound();
   }
 
-  const PenaIcon = pena.icon as LucideIcon;
+  const getIconComponent = (iconName: string | LucideIcon): LucideIcon => {
+      if (typeof iconName !== 'string') return iconName;
+      const Icon = (lucideIcons as any)[iconName];
+      return Icon || HelpCircle;
+  }
+
+  const PenaIcon = getIconComponent(pena.icon);
   const penaImage = PlaceHolderImages.find((p) => p.id === pena.image);
 
   return (
@@ -93,3 +101,10 @@ export default async function PenaDetailPage({ params }: Props) {
     </div>
   );
 }
+
+// Keeping generateStaticParams can be useful for SSG if you have a build step
+// that can pre-fetch these slugs, but it's not required for CSR/SSR with dynamic fetching.
+// export async function generateStaticParams() {
+//   // This would need to fetch slugs from Firestore at build time
+//   return [];
+// }

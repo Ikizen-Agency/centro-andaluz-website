@@ -3,7 +3,6 @@ import { initializeApp, getApps, getApp, type FirebaseOptions } from 'firebase-a
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { firebaseConfig } from './config';
-import 'server-only';
 
 function getFirebaseAdminOptions(): FirebaseOptions {
     return {

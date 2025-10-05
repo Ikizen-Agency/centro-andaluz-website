@@ -1,7 +1,7 @@
 
 import type { Post, PostMeta } from './types';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
-import { getSdks } from '@/firebase/server';
+import { firestore } from '@/firebase/server';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 
 interface PostModule {
@@ -42,7 +42,6 @@ export async function getPosts(): Promise<Post[]> {
 
   // Then, get posts from Firestore
   try {
-    const { firestore } = await getSdks();
     const postsCollection = collection(firestore, 'blog_posts');
     const postsSnapshot = await getDocs(postsCollection);
     const firestorePosts: Post[] = postsSnapshot.docs.map(doc => {
@@ -85,7 +84,6 @@ export async function getPost(slug: string): Promise<Post | undefined> {
 
   // If not found locally, try Firestore
   try {
-    const { firestore } = await getSdks();
     const postRef = doc(firestore, 'blog_posts', slug);
     const postSnap = await getDoc(postRef);
 

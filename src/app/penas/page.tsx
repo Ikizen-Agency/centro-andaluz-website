@@ -1,23 +1,28 @@
 
-
-import type { Metadata } from 'next';
+'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getPenas } from '@/lib/penas';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, HelpCircle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import * as lucideIcons from 'lucide-react';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
+import type { Pena } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export const metadata: Metadata = {
-  title: 'Peñas Culturales | Centro Andaluz de la Habana',
-  description: 'Nuestras reuniones mensuales para celebrar la cultura andaluza: flamenco, literatura, gastronomía y más.',
-};
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export default function PenasPage() {
+    const firestore = useFirestore();
+    const penasCollection = useMemoFirebase(() => collection(firestore, 'penas'), [firestore]);
+    const { data: penas, isLoading } = useCollection<Pena>(penasCollection);
 
-export default async function PenasPage() {
-  const penas = await getPenas();
+    const getIconComponent = (iconName: string | LucideIcon): LucideIcon => {
+        if (typeof iconName !== 'string') return iconName;
+        const Icon = (lucideIcons as any)[iconName];
+        return Icon || HelpCircle;
+    }
 
   return (
     <div className="bg-background">
@@ -34,10 +39,32 @@ export default async function PenasPage() {
           <div className="absolute left-1/2 -translate-x-1/2 h-full w-0.5 bg-border hidden md:block" />
 
           <div className="space-y-16">
-            {penas.map((pena, index) => {
+            {isLoading && Array.from({length: 3}).map((_, index) => {
+                const isEven = index % 2 === 0;
+                return (
+                     <div key={index} className="relative grid md:grid-cols-2 gap-8 items-center group">
+                        <div className={`relative ${isEven ? 'md:order-1' : 'md:order-2'}`}>
+                            <Skeleton className="aspect-video rounded-lg w-full" />
+                        </div>
+                        <div className={`text-center md:text-left ${isEven ? 'md:order-2' : 'md:order-1'}`}>
+                            <Card>
+                                <CardHeader>
+                                    <Skeleton className="h-8 w-3/4 mb-2" />
+                                    <Skeleton className="h-4 w-1/2" />
+                                </CardHeader>
+                                <CardContent>
+                                    <Skeleton className="h-4 w-full mb-2" />
+                                    <Skeleton className="h-4 w-5/6" />
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </div>
+                )
+            })}
+            {penas && penas.map((pena, index) => {
               const isEven = index % 2 === 0;
               const penaImage = PlaceHolderImages.find(p => p.id === pena.image);
-              const PenaIcon = pena.icon as LucideIcon;
+              const PenaIcon = getIconComponent(pena.icon);
               return (
                 <div key={pena.id} className="relative grid md:grid-cols-2 gap-8 items-center group">
                   {/* Timeline Dot */}

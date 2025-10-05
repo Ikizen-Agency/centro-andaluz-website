@@ -1,4 +1,4 @@
-import { getPosts } from '@/lib/posts'
+import { getPosts } from '@/lib/posts.tsx'
 import { events } from '@/lib/events'
 import { MetadataRoute } from 'next'
 
