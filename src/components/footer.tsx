@@ -67,6 +67,9 @@ export default function Footer() {
         
         <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} Centro Andaluz de la Habana. Todos los derechos reservados.</p>
+          <p className="mt-2">
+            Made by <a href="https://ikizen.vercel.app/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">iKizen</a>
+          </p>
         </div>
       </div>
     </footer>
