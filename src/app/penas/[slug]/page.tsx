@@ -1,18 +1,21 @@
+
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import type { Metadata } from 'next';
-import { penas } from '@/lib/penas';
+import { getPena, getPenas } from '@/lib/penas';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import type { LucideIcon } from 'lucide-react';
+
 
 type Props = {
   params: { slug: string };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const pena = penas.find((p) => p.id === params.slug);
+  const pena = await getPena(params.slug);
 
   if (!pena) {
     return {
@@ -26,19 +29,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const penas = await getPenas();
   return penas.map((pena) => ({
     slug: pena.id,
   }));
 }
 
-export default function PenaDetailPage({ params }: Props) {
-  const pena = penas.find((p) => p.id === params.slug);
+export default async function PenaDetailPage({ params }: Props) {
+  const pena = await getPena(params.slug);
 
   if (!pena) {
     notFound();
   }
 
+  const PenaIcon = pena.icon as LucideIcon;
   const penaImage = PlaceHolderImages.find((p) => p.id === pena.image);
 
   return (
@@ -65,7 +70,7 @@ export default function PenaDetailPage({ params }: Props) {
           </div>
           <div className="p-6 md:p-8">
             <div className="flex items-center text-muted-foreground mb-6">
-                <pena.icon className="h-6 w-6 mr-3 text-primary flex-shrink-0" />
+                <PenaIcon className="h-6 w-6 mr-3 text-primary flex-shrink-0" />
                 <Calendar className="h-5 w-5 mr-2" />
                 <span className="font-semibold">{pena.day}</span>
             </div>

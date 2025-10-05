@@ -1,7 +1,12 @@
-import type { Event } from './types';
 
-export const events: Event[] = [
+import type { Event } from './types';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { getSdks } from '@/firebase/server';
+
+
+const staticEvents: Event[] = [
   {
+    id: 'noche-flamenca-en-la-habana',
     slug: 'noche-flamenca-en-la-habana',
     title: 'Noche Flamenca en La Habana',
     date: 'Sábado, 10 de agosto de 2024',
@@ -17,6 +22,7 @@ export const events: Event[] = [
     ],
   },
   {
+    id: 'concierto-de-guitarra-andaluza',
     slug: 'concierto-de-guitarra-andaluza',
     title: 'Concierto de Guitarra Andaluza',
     date: 'Viernes, 6 de septiembre de 2024',
@@ -30,6 +36,7 @@ export const events: Event[] = [
     ]
   },
   {
+    id: 'taller-de-baile-por-sevillanas',
     slug: 'taller-de-baile-por-sevillanas',
     title: 'Taller de Baile por Sevillanas',
     date: 'Domingo, 22 de septiembre de 2024',
@@ -44,6 +51,7 @@ export const events: Event[] = [
     ]
   },
   {
+    id: 'degustacion-de-tapas-y-vinos',
     slug: 'degustacion-de-tapas-y-vinos',
     title: 'Degustación de Tapas y Vinos',
     date: 'Sábado, 12 de octubre de 2024',
@@ -57,3 +65,39 @@ export const events: Event[] = [
     ]
   },
 ];
+
+
+export async function getEvents(): Promise<Event[]> {
+    try {
+        const { firestore } = await getSdks();
+        const eventsCollection = collection(firestore, 'events');
+        const eventsSnapshot = await getDocs(eventsCollection);
+        const firestoreEvents = eventsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, slug: doc.id }) as Event);
+        
+        // In a real app, you might want to merge or prioritize data. For now, we'll return Firestore data if available.
+        if (firestoreEvents.length > 0) {
+            return firestoreEvents.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        }
+        return staticEvents;
+    } catch (error) {
+        console.error("Error fetching events from Firestore, falling back to static data:", error);
+        return staticEvents;
+    }
+}
+
+export async function getEvent(slug: string): Promise<Event | undefined> {
+     try {
+        const { firestore } = await getSdks();
+        const eventRef = doc(firestore, 'events', slug);
+        const eventSnap = await getDoc(eventRef);
+
+        if (eventSnap.exists()) {
+            return { ...eventSnap.data(), id: eventSnap.id, slug: eventSnap.id } as Event;
+        }
+        // Fallback to static data if not found in Firestore
+        return staticEvents.find((e) => e.slug === slug);
+    } catch (error) {
+        console.error("Error fetching event from Firestore, falling back to static data:", error);
+        return staticEvents.find((e) => e.slug === slug);
+    }
+}

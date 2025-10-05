@@ -36,6 +36,7 @@ export interface Post {
   date: string;
   image: string;
   component: ComponentType;
+  content?: string; // Add content field for Firestore
   // This is a simplified representation. In a real MDX setup, this would be the compiled component.
 }
 

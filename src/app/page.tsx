@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Calendar, Feather, Utensils, Music, Users, Palette } from "lucide-react";
-import { events } from "@/lib/events";
+import { getEvents } from "@/lib/events";
 import { getPosts } from "@/lib/posts";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import PenasCarousel from "@/components/penas-carousel";
@@ -12,9 +12,11 @@ import PenasCarousel from "@/components/penas-carousel";
 const heroImage = PlaceHolderImages.find(p => p.id === "hero");
 const aboutImage = PlaceHolderImages.find(p => p.id === "about");
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 export default async function HomePage() {
   const latestPosts = (await getPosts()).slice(0, 2);
-  const upcomingEvents = events.slice(0, 3);
+  const upcomingEvents = (await getEvents()).slice(0, 3);
 
   return (
     <div className="flex flex-col min-h-screen">

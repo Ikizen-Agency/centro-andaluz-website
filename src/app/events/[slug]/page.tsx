@@ -1,7 +1,8 @@
+
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import type { Metadata } from 'next';
-import { events } from '@/lib/events';
+import { getEvent, getEvents } from '@/lib/events';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,7 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const event = events.find((e) => e.slug === params.slug);
+  const event = await getEvent(params.slug);
 
   if (!event) {
     return {
@@ -27,14 +28,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const events = await getEvents();
   return events.map((event) => ({
     slug: event.slug,
   }));
 }
 
-export default function EventDetailPage({ params }: Props) {
-  const event = events.find((e) => e.slug === params.slug);
+export default async function EventDetailPage({ params }: Props) {
+  const event = await getEvent(params.slug);
 
   if (!event) {
     notFound();

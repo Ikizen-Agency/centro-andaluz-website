@@ -1,4 +1,8 @@
+
 import type { Post, PostMeta } from './types';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { getSdks } from '@/firebase/server';
+import { MDXRemote } from 'next-mdx-remote/rsc';
 
 interface PostModule {
   meta: PostMeta;
@@ -17,8 +21,15 @@ const postImports: Record<string, () => Promise<PostModule>> = {
   'sherry-liquid-gold-of-jerez': () => import('@/content/blog/sherry-liquid-gold-of-jerez'),
 };
 
+
+function createComponentFromContent(content: string) {
+    return () => <MDXRemote source={content} />;
+}
+
+
 export async function getPosts(): Promise<Post[]> {
-  const posts = await Promise.all(
+  // First, get posts from local files
+  const localPosts = await Promise.all(
     Object.entries(postImports).map(async ([slug, importFn]) => {
       const { meta, default: component } = await importFn();
       return {
@@ -28,19 +39,74 @@ export async function getPosts(): Promise<Post[]> {
       };
     })
   );
-  // Sort posts by date, newest first
-  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  // Then, get posts from Firestore
+  try {
+    const { firestore } = await getSdks();
+    const postsCollection = collection(firestore, 'blog_posts');
+    const postsSnapshot = await getDocs(postsCollection);
+    const firestorePosts: Post[] = postsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        slug: data.slug,
+        title: data.title,
+        description: data.description,
+        author: data.author,
+        date: data.date, // Assuming date is a string
+        image: data.image,
+        content: data.content,
+        component: createComponentFromContent(data.content || ''),
+      };
+    });
+    
+    // Combine and sort
+    const allPosts = [...localPosts, ...firestorePosts];
+    return allPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  } catch (error) {
+    console.error("Error fetching posts from Firestore, falling back to local:", error);
+    // Sort local posts by date, newest first
+    return localPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }
 }
 
 export async function getPost(slug: string): Promise<Post | undefined> {
+  // First, try to get from local files
   const importFn = postImports[slug];
-  if (!importFn) {
+  if (importFn) {
+    const { meta, default: component } = await importFn();
+    return {
+      slug,
+      ...meta,
+      component,
+    };
+  }
+
+  // If not found locally, try Firestore
+  try {
+    const { firestore } = await getSdks();
+    const postRef = doc(firestore, 'blog_posts', slug);
+    const postSnap = await getDoc(postRef);
+
+    if (postSnap.exists()) {
+      const data = postSnap.data();
+      return {
+        id: postSnap.id,
+        slug: data.slug,
+        title: data.title,
+        description: data.description,
+        author: data.author,
+        date: data.date,
+        image: data.image,
+        content: data.content,
+        component: createComponentFromContent(data.content || ''),
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching post from Firestore:", error);
     return undefined;
   }
-  const { meta, default: component } = await importFn();
-  return {
-    slug,
-    ...meta,
-    component,
-  };
+  
+  return undefined;
 }

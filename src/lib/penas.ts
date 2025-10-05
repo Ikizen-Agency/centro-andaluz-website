@@ -1,14 +1,26 @@
-import type { Pena } from './types';
-import { Music, BookOpen, Utensils, Brush, Film } from 'lucide-react';
 
-export const penas: Pena[] = [
+import type { Pena } from './types';
+import { Music, BookOpen, Utensils, Brush, Film, type LucideIcon } from 'lucide-react';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { getSdks } from '@/firebase/server';
+
+
+const iconMap: { [key: string]: LucideIcon } = {
+    Music,
+    BookOpen,
+    Utensils,
+    Brush,
+    Film
+};
+
+const staticPenas: Pena[] = [
     {
         id: 'pena-flamenca',
         title: 'Peña Flamenca',
         day: 'Primer viernes de cada mes',
         description: 'Una noche dedicada al cante, baile y toque flamenco. Artistas locales e invitados especiales comparten su arte en un ambiente íntimo.',
         longDescription: 'Nuestra peña más antigua y concurrida. Es un espacio para la expresión pura del flamenco, donde se dan cita aficionados y profesionales. Cada sesión cuenta con un cuadro flamenco base y abre el escenario para participaciones espontáneas, manteniendo viva la esencia de esta tradición.',
-        icon: Music,
+        icon: 'Music',
         image: 'event-flamenco',
     },
     {
@@ -17,7 +29,7 @@ export const penas: Pena[] = [
         day: 'Segundo miércoles de cada mes',
         description: 'Un espacio para la lectura y el debate sobre la rica literatura andaluza, desde los clásicos como Lorca hasta autores contemporáneos.',
         longDescription: 'Analizamos una obra diferente cada mes, con presentaciones, lecturas dramatizadas y debates moderados. El objetivo es profundizar en las letras andaluzas y su contexto histórico y cultural. No se requiere lectura previa para asistir, ¡solo curiosidad!',
-        icon: BookOpen,
+        icon: 'BookOpen',
         image: 'culture-golden-age',
     },
     {
@@ -26,7 +38,7 @@ export const penas: Pena[] = [
         day: 'Tercer jueves de cada mes',
         description: 'Una degustación y charla sobre un plato o producto emblemático de la cocina andaluza. Vinos, aceites, jamones y más.',
         longDescription: 'Cada tertulia se centra en una joya de la gastronomía de Andalucía. Un experto o cocinero invitado nos guía a través de la historia, la elaboración y, por supuesto, la degustación del producto. Es una experiencia sensorial para aprender y disfrutar con el paladar.',
-        icon: Utensils,
+        icon: 'Utensils',
         image: 'event-tapas',
     },
     {
@@ -35,7 +47,7 @@ export const penas: Pena[] = [
         day: 'Cuarto sábado de cada mes',
         description: 'Un taller práctico para explorar técnicas artísticas andaluzas, como la cerámica, el esparto o la pintura de abanicos.',
         longDescription: 'Manos a la obra. Este taller rotativo invita a los participantes a crear su propia pieza de artesanía inspirada en las tradiciones andaluzas. Los materiales están incluidos y no se necesita experiencia previa, solo ganas de crear y compartir.',
-        icon: Brush,
+        icon: 'Brush',
         image: 'culture-art',
     },
     {
@@ -44,7 +56,64 @@ export const penas: Pena[] = [
         day: 'Último martes de cada mes',
         description: 'Proyección de una película o documental relevante para la cultura andaluza, seguida de un coloquio y debate.',
         longDescription: 'Desde clásicos del cine español rodados en Andalucía hasta documentales sobre su historia o naturaleza. Tras la proyección, abrimos un espacio de diálogo para analizar la obra y los temas que aborda, conectando el séptimo arte con nuestra cultura.',
-        icon: Film,
+        icon: 'Film',
         image: 'culture-discovery',
     }
-]
+].map(p => ({ ...p, icon: iconMap[p.icon as string] }));
+
+
+export async function getPenas(): Promise<Pena[]> {
+    try {
+        const { firestore } = await getSdks();
+        const penasCollection = collection(firestore, 'penas');
+        const penasSnapshot = await getDocs(penasCollection);
+        const firestorePenas = penasSnapshot.docs.map(doc => {
+            const data = doc.data();
+            const iconName = data.icon as string;
+            return {
+                ...data,
+                id: doc.id,
+                icon: iconMap[iconName] || Music, // Fallback to a default icon
+            } as Pena;
+        });
+
+        if (firestorePenas.length > 0) {
+            return firestorePenas;
+        }
+        return staticPenas;
+    } catch (error) {
+        console.error("Error fetching penas from Firestore, falling back to static data:", error);
+        return staticPenas;
+    }
+}
+
+export async function getPena(id: string): Promise<Pena | undefined> {
+    try {
+        const { firestore } = await getSdks();
+        const penaRef = doc(firestore, 'penas', id);
+        const penaSnap = await getDoc(penaRef);
+
+        if (penaSnap.exists()) {
+            const data = penaSnap.data();
+            const iconName = data.icon as string;
+            return {
+                ...data,
+                id: penaSnap.id,
+                icon: iconMap[iconName] || Music,
+            } as Pena;
+        }
+        const staticPena = staticPenas.find(p => p.id === id);
+        if(staticPena) {
+            return {...staticPena, icon: iconMap[staticPena.icon as string] || Music };
+        }
+        return undefined;
+
+    } catch (error) {
+        console.error("Error fetching pena from Firestore, falling back to static data:", error);
+        const staticPena = staticPenas.find(p => p.id === id);
+        if(staticPena) {
+            return {...staticPena, icon: iconMap[staticPena.icon as string] || Music };
+        }
+        return undefined;
+    }
+}

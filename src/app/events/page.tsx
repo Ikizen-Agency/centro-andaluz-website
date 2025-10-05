@@ -1,8 +1,9 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { events } from '@/lib/events';
+import { getEvents } from '@/lib/events';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Calendar, MapPin } from 'lucide-react';
 
@@ -11,7 +12,11 @@ export const metadata: Metadata = {
   description: 'Explora los próximos eventos, talleres y presentaciones que celebran la cultura andaluza en La Habana.',
 };
 
-export default function EventsPage() {
+export const revalidate = 60; // Revalidate every 60 seconds
+
+export default async function EventsPage() {
+  const events = await getEvents();
+  
   return (
     <div className="bg-background">
       <div className="container mx-auto px-4 py-16 md:py-24">

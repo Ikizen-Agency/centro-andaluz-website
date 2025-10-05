@@ -1,18 +1,24 @@
 
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { penas } from '@/lib/penas';
+import { getPenas } from '@/lib/penas';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowRight } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Peñas Culturales | Centro Andaluz de la Habana',
   description: 'Nuestras reuniones mensuales para celebrar la cultura andaluza: flamenco, literatura, gastronomía y más.',
 };
 
-export default function PenasPage() {
+export const revalidate = 60; // Revalidate every 60 seconds
+
+export default async function PenasPage() {
+  const penas = await getPenas();
+
   return (
     <div className="bg-background">
       <div className="container mx-auto px-4 py-16 md:py-24">
@@ -31,6 +37,7 @@ export default function PenasPage() {
             {penas.map((pena, index) => {
               const isEven = index % 2 === 0;
               const penaImage = PlaceHolderImages.find(p => p.id === pena.image);
+              const PenaIcon = pena.icon as LucideIcon;
               return (
                 <div key={pena.id} className="relative grid md:grid-cols-2 gap-8 items-center group">
                   {/* Timeline Dot */}
@@ -59,7 +66,7 @@ export default function PenasPage() {
                             <CardHeader>
                                 <CardTitle className="!font-headline text-2xl mb-2">{pena.title}</CardTitle>
                                 <div className="flex items-center text-sm text-muted-foreground justify-center md:justify-start">
-                                    <pena.icon className="h-5 w-5 mr-2 text-primary flex-shrink-0" />
+                                    <PenaIcon className="h-5 w-5 mr-2 text-primary flex-shrink-0" />
                                     <span>{pena.day}</span>
                                 </div>
                             </CardHeader>
