@@ -115,7 +115,6 @@ export default function CulturePage() {
                                     fill
                                     className="object-cover"
                                     data-ai-hint={topicImage.imageHint}
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                                     <div className="absolute bottom-4 left-4">
