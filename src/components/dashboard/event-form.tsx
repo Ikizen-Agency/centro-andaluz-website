@@ -26,6 +26,8 @@ import type { Event } from "@/lib/types"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
+import { useFirestore } from "@/firebase"
+import { doc, setDoc } from "firebase/firestore"
 
 
 const eventFormSchema = z.object({
@@ -48,21 +50,17 @@ interface EventFormProps {
     onCancel?: () => void;
 }
 
-// A simple helper function to try and parse different date formats
 const parseDate = (dateStr: string | Date): Date | undefined => {
-  if (dateStr instanceof Date) {
-    return dateStr;
+  if (dateStr instanceof Date) return dateStr;
+  if (typeof dateStr !== 'string') return undefined;
+  
+  // Handle Firestore Timestamp objects if they are serialized as objects
+  if (typeof dateStr === 'object' && dateStr !== null && 'seconds' in dateStr) {
+     // @ts-ignore
+    return new Date(dateStr.seconds * 1000);
   }
-  if (typeof dateStr !== 'string') {
-    return undefined;
-  }
-  // Try parsing different formats if needed. For now, assuming a format that `new Date()` can handle.
-  // Example: "Sábado, 10 de agosto de 2024" is not directly parsable by `new Date()`.
-  // This would require a more robust parsing logic. For this implementation,
-  // we'll assume the initialData.date can be converted.
+
   try {
-     // A more robust implementation would handle various string formats from the lib/events.ts file.
-     // For now, this will work for standard date strings.
     const date = new Date(dateStr);
     return isNaN(date.getTime()) ? undefined : date;
   } catch {
@@ -73,6 +71,7 @@ const parseDate = (dateStr: string | Date): Date | undefined => {
 export function EventForm({ initialData, onSave, onCancel }: EventFormProps) {
   const { toast } = useToast();
   const isEditMode = !!initialData;
+  const firestore = useFirestore();
 
   const form = useForm<EventFormValues>({
     resolver: zodResolver(eventFormSchema),
@@ -97,20 +96,36 @@ export function EventForm({ initialData, onSave, onCancel }: EventFormProps) {
     }
   }, [initialData, isEditMode, form]);
 
-  function onSubmit(data: EventFormValues) {
-    console.log({
+  async function onSubmit(data: EventFormValues) {
+    const docId = isEditMode ? initialData!.id! : data.slug;
+    const eventRef = doc(firestore, "events", docId);
+    
+    // In a real app, you would handle image uploads and get a URL.
+    // For now, we'll just use a placeholder string.
+    const imageUrl = `placeholder-for-${data.slug}`;
+
+    const dataToSave = {
         ...data,
         date: format(data.date, "EEEE, d 'de' MMMM 'de' yyyy", { locale: es }),
-    });
-    toast({
-      title: isEditMode ? "Evento Actualizado" : "Evento Creado",
-      description: `El evento "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'} (simulación).`,
-    })
-    
-    if (onSave) {
-        onSave();
-    } else {
-        form.reset();
+        image: isEditMode && !data.image ? initialData?.image : imageUrl,
+    };
+    // @ts-ignore
+    delete dataToSave.image; // Don't save the file object
+
+    try {
+        await setDoc(eventRef, dataToSave, { merge: isEditMode });
+        toast({
+          title: isEditMode ? "Evento Actualizado" : "Evento Creado",
+          description: `El evento "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'} con éxito.`,
+        })
+        if (onSave) onSave();
+    } catch(error) {
+        console.error("Error saving event:", error);
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: "No se pudo guardar el evento."
+        })
     }
   }
 

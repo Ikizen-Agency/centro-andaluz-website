@@ -1,3 +1,4 @@
+
 import type { ComponentType } from 'react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -7,6 +8,7 @@ export interface EventArtist {
 }
 
 export interface Event {
+  id?: string; // Firestore ID
   slug: string;
   title: string;
   date: string;
@@ -26,6 +28,7 @@ export interface Member {
 }
 
 export interface Post {
+  id?: string; // Firestore ID
   slug: string;
   title: string;
   description: string;
@@ -36,14 +39,15 @@ export interface Post {
   // This is a simplified representation. In a real MDX setup, this would be the compiled component.
 }
 
-export interface PostMeta extends Omit<Post, 'slug' | 'component'> {}
+export interface PostMeta extends Omit<Post, 'slug' | 'component' | 'id'> {}
+
 
 export interface Pena {
-    id: string;
+    id: string; // This will now be the Firestore document ID for penas
     title: string;
     day: string;
     description: string;
     longDescription: string;
-    icon: LucideIcon;
+    icon: LucideIcon | string; // Allow string for storing icon name
     image: string;
 }

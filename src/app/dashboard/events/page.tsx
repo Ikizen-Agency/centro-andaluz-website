@@ -6,26 +6,40 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { EventForm } from "@/components/dashboard/event-form";
-import { events as initialEvents } from "@/lib/events";
 import { PlusCircle, Trash2, Pencil } from 'lucide-react';
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { Event } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
+import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
+import { collection, deleteDoc, doc } from "firebase/firestore";
 
 export default function EventsPage() {
     const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
     const [isEditFormOpen, setIsEditFormOpen] = useState(false);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
-    const [events, setEvents] = useState<Event[]>(initialEvents);
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
     const { toast } = useToast();
+    const firestore = useFirestore();
 
-    const handleDelete = (slug: string) => {
-        setEvents(events.filter(e => e.slug !== slug));
-        toast({
-            title: "Evento Eliminado",
-            description: "El evento ha sido eliminado con éxito (simulación)."
-        });
+    const eventsCollection = useMemoFirebase(() => collection(firestore, "events"), [firestore]);
+    const { data: events, isLoading } = useCollection<Event>(eventsCollection);
+
+    const handleDelete = async (slug: string) => {
+        if (!slug) return;
+        try {
+            await deleteDoc(doc(firestore, "events", slug));
+            toast({
+                title: "Evento Eliminado",
+                description: "El evento ha sido eliminado con éxito."
+            });
+        } catch (error) {
+            console.error("Error deleting event:", error);
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "No se pudo eliminar el evento."
+            });
+        }
     };
     
     const handleEditClick = (event: Event) => {
@@ -41,7 +55,7 @@ export default function EventsPage() {
     const handleFormSuccess = () => {
         setIsCreateFormOpen(false);
         setIsEditFormOpen(false);
-        // Here you would typically refetch the data
+        // Data will refetch automatically thanks to useCollection
     };
 
     return (
@@ -83,7 +97,8 @@ export default function EventsPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {events.map((event) => (
+                            {isLoading && <TableRow><TableCell colSpan={4}>Cargando eventos...</TableCell></TableRow>}
+                            {events && events.map((event) => (
                                 <TableRow key={event.slug} onClick={() => handleRowClick(event)} className="cursor-pointer">
                                     <TableCell className="font-medium">{event.title}</TableCell>
                                     <TableCell>{event.date}</TableCell>
@@ -107,7 +122,7 @@ export default function EventsPage() {
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(event.slug)}>
+                                                    <AlertDialogAction onClick={() => handleDelete(event.id!)}>
                                                         Eliminar
                                                     </AlertDialogAction>
                                                 </AlertDialogFooter>
