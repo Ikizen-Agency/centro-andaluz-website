@@ -16,6 +16,7 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const isDashboard = pathname.startsWith('/dashboard');
+  const isLogin = pathname === '/login';
 
   return (
     <html lang="es" className="scroll-smooth">
@@ -29,11 +30,11 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <FirebaseClientProvider>
-          {!isDashboard && <Header />}
-          <main className={isDashboard ? '' : 'min-h-screen'}>
+          {!isDashboard && !isLogin && <Header />}
+          <main className={(isDashboard || isLogin) ? '' : 'min-h-screen'}>
             {children}
           </main>
-          {!isDashboard && <Footer />}
+          {!isDashboard && !isLogin && <Footer />}
           <Toaster />
         </FirebaseClientProvider>
       </body>

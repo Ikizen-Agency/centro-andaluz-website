@@ -1,10 +1,15 @@
 
 'use client';
-import { SidebarProvider, Sidebar, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { Home, Newspaper, Calendar, Clapperboard } from "lucide-react";
+import { SidebarProvider, Sidebar, SidebarInset, SidebarHeader, SidebarContent, SidebarFooter, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
+import { Home, Newspaper, Calendar, Clapperboard, LogOut, Loader } from "lucide-react";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, redirect } from "next/navigation";
+import { useAuth, useUser } from "@/firebase";
+import { signOut } from "firebase/auth";
+import { useToast } from "@/hooks/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
+
 
 export default function DashboardLayout({
   children,
@@ -12,6 +17,26 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast({
+        title: "Sesión Cerrada",
+        description: "Has cerrado sesión con éxito."
+      });
+      // Redirect handled by the effect below
+    } catch (error) {
+       toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No se pudo cerrar la sesión."
+      });
+    }
+  };
 
   const navLinks = [
     { href: "/dashboard", label: "Panel", icon: Home },
@@ -19,6 +44,18 @@ export default function DashboardLayout({
     { href: "/dashboard/penas", label: "Peñas", icon: Clapperboard },
     { href: "/dashboard/articles", label: "Artículos", icon: Newspaper },
   ];
+
+  if (isUserLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <Loader className="h-12 w-12 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  if (!user) {
+    redirect('/login');
+  }
 
   return (
     <SidebarProvider defaultOpen={false}>
@@ -48,6 +85,16 @@ export default function DashboardLayout({
                 ))}
             </SidebarMenu>
         </SidebarContent>
+        <SidebarFooter>
+            <SidebarMenu>
+                 <SidebarMenuItem>
+                    <SidebarMenuButton onClick={handleLogout} tooltip="Cerrar Sesión">
+                      <LogOut />
+                      <span>Cerrar Sesión</span>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
+        </SidebarFooter>
       </Sidebar>
       <SidebarInset>
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-6 sticky top-0 bg-background z-10">
