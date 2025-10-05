@@ -2,10 +2,10 @@ import type { PostMeta } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 
 export const meta: PostMeta = {
-  title: 'Semana Santa in Seville: A Spectacle of Devotion',
-  description: 'Experience the profound emotion and solemn beauty of Holy Week in Seville, one of the world\'s most famous religious festivals.',
+  title: 'Semana Santa en Sevilla: Un Espectáculo de Devoción',
+  description: 'Vive la profunda emoción y la solemne belleza de la Semana Santa en Sevilla, una de las festividades religiosas más famosas del mundo.',
   author: 'Isabella Reyes',
-  date: 'July 25, 2024',
+  date: '25 de julio de 2024',
   image: 'blog-semana-santa',
 };
 
@@ -13,32 +13,32 @@ export default function PostContent() {
   return (
     <div className="prose prose-lg dark:prose-invert max-w-none mx-auto text-foreground/90">
       <p className="lead text-xl">
-        Every spring, the city of Seville transforms. The air fills with the scent of incense and beeswax, the sound of solemn drumbeats echoes through the streets, and a palpable sense of devotion takes hold. This is Semana Santa, or Holy Week, a tradition that dates back to the 16th century and is one of the most breathtaking cultural events in Spain.
+        Cada primavera, la ciudad de Sevilla se transforma. El aire se llena del aroma a incienso y cera de abejas, el sonido de solemnes tambores resuena por las calles y un palpable sentido de devoción se apodera de todo. Esto es la Semana Santa, una tradición que se remonta al siglo XVI y es uno de los eventos culturales más impresionantes de España.
       </p>
       
       <p>
-        For seven days, from Palm Sunday to Easter Sunday, religious brotherhoods known as "cofradías" lead processions through the city. The central features of these processions are the magnificent "pasos," large, ornate floats depicting scenes from the Passion of Christ and sorrows of the Virgin Mary.
+        Durante siete días, desde el Domingo de Ramos hasta el Domingo de Resurrección, las hermandades religiosas conocidas como "cofradías" realizan procesiones por la ciudad. Las piezas centrales de estas procesiones son los magníficos "pasos", grandes e-books-ornamentados que representan escenas de la Pasión de Cristo y los dolores de la Virgen María.
       </p>
 
-      <h3 className="!font-headline text-2xl mt-8">The Nazarenos and the Pasos</h3>
+      <h3 className="!font-headline text-2xl mt-8">Los Nazarenos y los Pasos</h3>
       <p>
-        The streets are filled with "nazarenos," members of the brotherhoods who wear penitential robes and conical hoods ("capirotes") that conceal their faces, a symbol of mourning and anonymity in their penance. They walk in silent procession, carrying long wax candles.
+        Las calles se llenan de "nazarenos", miembros de las hermandades que visten túnicas de penitencia y capirotes cónicos que ocultan sus rostros, un símbolo de luto y anonimato en su penitencia. Caminan en procesión silenciosa, portando largos cirios de cera.
       </p>
 
       <p>
-        The "pasos" themselves are masterpieces of religious art, often centuries old, adorned with intricate goldwork, embroidery, and countless flowers. They are carried on the shoulders of "costaleros," who are hidden from view beneath the float. Their rhythmic, swaying walk gives the statues a lifelike quality, a sight that is both solemn and deeply moving.
+        Los "pasos" en sí son obras maestras del arte religioso, a menudo con siglos de antigüedad, adornados con intrincados trabajos en oro, bordados e innumerables flores. Son llevados sobre los hombros de los "costaleros", que están ocultos a la vista bajo el paso. Su caminar rítmico y oscilante da a las estatuas una cualidad realista, una vista que es a la vez solemne y profundamente conmovedora.
       </p>
 
       <Card className="my-8 bg-secondary border-accent/50">
         <CardContent className="pt-6">
             <p className="m-0 p-0">
-                A key moment in any procession is the "saeta," a spontaneous, mournful flamenco prayer sung from a balcony as a paso passes by. It is a heart-wrenching expression of devotion that can bring an entire street to a standstill.
+                Un momento clave en cualquier procesión es la "saeta", una oración flamenca espontánea y lastimera cantada desde un balcón al pasar un paso. Es una expresión desgarradora de devoción que puede detener a toda una calle.
             </p>
         </CardContent>
       </Card>
       
       <p>
-        Semana Santa in Seville is more than a religious observance; it is a multisensory experience that encapsulates art, history, music, and community faith. It's a profound cultural spectacle that must be seen to be truly understood.
+        La Semana Santa en Sevilla es más que una observancia religiosa; es una experiencia multisensorial que encapsula arte, historia, música y fe comunitaria. Es un profundo espectáculo cultural que debe ser visto para ser verdaderamente comprendido.
       </p>
     </div>
   );

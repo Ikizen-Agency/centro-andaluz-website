@@ -25,18 +25,18 @@ export default function ArticlesPage() {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Blog Articles</h1>
+                <h1 className="text-3xl font-bold">Artículos del Blog</h1>
                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                         <Button>
-                            <PlusCircle className="mr-2 h-4 w-4" /> Add New Article
+                            <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nuevo Artículo
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[625px]">
                         <DialogHeader>
-                            <DialogTitle>Create a New Blog Article</DialogTitle>
+                            <DialogTitle>Crear un Nuevo Artículo de Blog</DialogTitle>
                             <DialogDescription>
-                                Fill out the form below to add a new article to the blog.
+                                Completa el siguiente formulario para añadir un nuevo artículo al blog.
                             </DialogDescription>
                         </DialogHeader>
                         <ArticleForm />
@@ -45,17 +45,17 @@ export default function ArticlesPage() {
             </div>
             <Card>
                 <CardHeader>
-                    <CardTitle>Existing Articles</CardTitle>
-                    <CardDescription>A list of all current blog articles.</CardDescription>
+                    <CardTitle>Artículos Existentes</CardTitle>
+                    <CardDescription>Una lista de todos los artículos actuales del blog.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Title</TableHead>
-                                <TableHead>Author</TableHead>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Actions</TableHead>
+                                <TableHead>Título</TableHead>
+                                <TableHead>Autor</TableHead>
+                                <TableHead>Fecha</TableHead>
+                                <TableHead>Acciones</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -65,7 +65,7 @@ export default function ArticlesPage() {
                                     <TableCell>{post.author}</TableCell>
                                     <TableCell>{post.date}</TableCell>
                                     <TableCell>
-                                        <Button variant="outline" size="sm">Edit</Button>
+                                        <Button variant="outline" size="sm">Editar</Button>
                                     </TableCell>
                                 </TableRow>
                             ))}

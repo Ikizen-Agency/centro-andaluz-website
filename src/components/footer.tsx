@@ -10,15 +10,15 @@ const socialLinks = [
 ];
 
 const footerLinks = [
-    { title: "Explore", links: [
-        { label: "Home", href: "/" },
-        { label: "Events", href: "/events" },
-        { label: "Community", href: "/members" },
+    { title: "Explorar", links: [
+        { label: "Inicio", href: "/" },
+        { label: "Eventos", href: "/events" },
+        { label: "Comunidad", href: "/members" },
         { label: "Blog", href: "/blog" },
     ]},
-    { title: "About", links: [
-        { label: "Our Mission", href: "/#about" },
-        { label: "Contact Us", href: "#" },
+    { title: "Sobre Nosotros", links: [
+        { label: "Nuestra Misión", href: "/#about" },
+        { label: "Contáctanos", href: "#" },
     ]},
 ];
 
@@ -32,7 +32,7 @@ export default function Footer() {
               <Logo />
             </Link>
             <p className="text-sm text-muted-foreground max-w-xs">
-              Preserving and promoting the vibrant spirit of Andalusian culture in the heart of Havana.
+              Preservando y promoviendo el espíritu vibrante de la cultura andaluza en el corazón de La Habana.
             </p>
           </div>
           
@@ -52,7 +52,7 @@ export default function Footer() {
           ))}
 
           <div>
-             <h4 className="font-headline font-semibold mb-4">Connect</h4>
+             <h4 className="font-headline font-semibold mb-4">Conecta</h4>
              <div className="flex space-x-2">
                 {socialLinks.map((social) => (
                     <Button key={social.name} variant="ghost" size="icon" asChild>
@@ -67,7 +67,7 @@ export default function Footer() {
         </div>
         
         <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Centro Andaluz de la Habana. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Centro Andaluz de la Habana. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>

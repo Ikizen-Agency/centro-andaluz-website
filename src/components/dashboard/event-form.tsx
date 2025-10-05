@@ -19,13 +19,13 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 
 const eventFormSchema = z.object({
-  title: z.string().min(2, "Title must be at least 2 characters.").max(100, "Title must be less than 100 characters."),
-  slug: z.string().min(2, "Slug must be at least 2 characters.").regex(/^[a-z0-9-]+$/, "Slug must be lowercase with dashes."),
-  date: z.string().min(1, "Date is required."),
-  location: z.string().min(1, "Location is required."),
-  description: z.string().min(10, "Short description must be at least 10 characters.").max(160, "Short description must be less than 160 characters."),
-  longDescription: z.string().min(20, "Long description must be at least 20 characters."),
-  image: z.string().min(1, "Image ID is required."),
+  title: z.string().min(2, "El título debe tener al menos 2 caracteres.").max(100, "El título debe tener menos de 100 caracteres."),
+  slug: z.string().min(2, "El slug debe tener al menos 2 caracteres.").regex(/^[a-z0-9-]+$/, "El slug debe estar en minúsculas con guiones."),
+  date: z.string().min(1, "La fecha es obligatoria."),
+  location: z.string().min(1, "La ubicación es obligatoria."),
+  description: z.string().min(10, "La descripción corta debe tener al menos 10 caracteres.").max(160, "La descripción corta debe tener menos de 160 caracteres."),
+  longDescription: z.string().min(20, "La descripción larga debe tener al menos 20 caracteres."),
+  image: z.string().min(1, "El ID de la imagen es obligatorio."),
 })
 
 type EventFormValues = z.infer<typeof eventFormSchema>
@@ -48,8 +48,8 @@ export function EventForm() {
   function onSubmit(data: EventFormValues) {
     console.log(data); // In a real app, you'd send this to a server
     toast({
-      title: "Event Submitted",
-      description: "The new event has been created (simulation).",
+      title: "Evento Enviado",
+      description: "El nuevo evento ha sido creado (simulación).",
     })
     form.reset();
   }
@@ -62,9 +62,9 @@ export function EventForm() {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Event Title</FormLabel>
+              <FormLabel>Título del Evento</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Flamenco Night in Havana" {...field} />
+                <Input placeholder="ej. Noche de Flamenco en La Habana" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,9 +77,9 @@ export function EventForm() {
             <FormItem>
               <FormLabel>Slug</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. flamenco-night-havana" {...field} />
+                <Input placeholder="ej. noche-de-flamenco-habana" {...field} />
               </FormControl>
-              <FormDescription>This is the URL-friendly version of the title.</FormDescription>
+              <FormDescription>Esta es la versión del título amigable para URLs.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -89,9 +89,9 @@ export function EventForm() {
           name="date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date</FormLabel>
+              <FormLabel>Fecha</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Saturday, August 10, 2024" {...field} />
+                <Input placeholder="ej. Sábado, 10 de agosto de 2024" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -102,9 +102,9 @@ export function EventForm() {
           name="location"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Location</FormLabel>
+              <FormLabel>Ubicación</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Grand Theatre of Havana" {...field} />
+                <Input placeholder="ej. Gran Teatro de La Habana" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -115,9 +115,9 @@ export function EventForm() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Short Description</FormLabel>
+              <FormLabel>Descripción Corta</FormLabel>
               <FormControl>
-                <Textarea placeholder="A brief summary of the event for card views." {...field} />
+                <Textarea placeholder="Un breve resumen del evento para las vistas de tarjeta." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -128,9 +128,9 @@ export function EventForm() {
           name="longDescription"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Description</FormLabel>
+              <FormLabel>Descripción Completa</FormLabel>
               <FormControl>
-                <Textarea placeholder="The detailed description for the event page." rows={5} {...field} />
+                <Textarea placeholder="La descripción detallada para la página del evento." rows={5} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -141,16 +141,16 @@ export function EventForm() {
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Image ID</FormLabel>
+              <FormLabel>ID de Imagen</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. event-flamenco" {...field} />
+                <Input placeholder="ej. event-flamenco" {...field} />
               </FormControl>
-               <FormDescription>The ID of the placeholder image to use.</FormDescription>
+               <FormDescription>El ID de la imagen de marcador de posición a usar.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Create Event</Button>
+        <Button type="submit">Crear Evento</Button>
       </form>
     </Form>
   )

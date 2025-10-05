@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!event) {
     return {
-      title: 'Event Not Found',
+      title: 'Evento no Encontrado',
     };
   }
 
@@ -68,12 +68,12 @@ export default function EventDetailPage({ params }: Props) {
           </div>
           <div className="grid md:grid-cols-3 gap-8 p-6 md:p-8">
             <div className="md:col-span-2">
-              <h2 className="text-2xl font-bold mb-4 !font-headline">About this Event</h2>
+              <h2 className="text-2xl font-bold mb-4 !font-headline">Sobre este Evento</h2>
               <p className="text-lg text-foreground/80 whitespace-pre-line mb-8">{event.longDescription}</p>
 
               {galleryImages.length > 0 && (
                 <div className="mb-8">
-                  <h2 className="text-2xl font-bold mb-4 !font-headline">Gallery</h2>
+                  <h2 className="text-2xl font-bold mb-4 !font-headline">Galería</h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {galleryImages.map((img) => img && (
                       <div key={img.id} className="relative aspect-square rounded-lg overflow-hidden shadow-md">
@@ -93,7 +93,7 @@ export default function EventDetailPage({ params }: Props) {
               
               {event.artists && event.artists.length > 0 && (
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-bold !font-headline">Guest Artists</h2>
+                  <h2 className="text-2xl font-bold !font-headline">Artistas Invitados</h2>
                   <ul className="list-disc list-inside text-foreground/80 space-y-2">
                     {event.artists.map((artist) => (
                         <li key={artist.name}>
@@ -107,17 +107,17 @@ export default function EventDetailPage({ params }: Props) {
             </div>
             <div className="md:col-span-1">
               <div className="bg-secondary p-6 rounded-lg space-y-4">
-                <h3 className="text-xl font-bold !font-headline">Details</h3>
+                <h3 className="text-xl font-bold !font-headline">Detalles</h3>
                 <div className="flex items-start">
                   <Calendar className="w-5 h-5 mr-3 mt-1 flex-shrink-0 text-primary" />
                   <div>
-                    <p className="font-semibold">Date</p>
+                    <p className="font-semibold">Fecha</p>
                     <p className="text-muted-foreground">{event.date}</p>
                   </div>
                 </div>
                  <Button size="lg" variant="outline" className="w-full mt-4" asChild>
                     <Link href="/events">
-                        Back to Events
+                        Volver a Eventos
                     </Link>
                 </Button>
               </div>

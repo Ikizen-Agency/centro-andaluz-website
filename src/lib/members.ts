@@ -4,37 +4,37 @@ export const members: Member[] = [
   {
     id: 1,
     name: 'Carlos Fernandez',
-    role: 'President & Founder',
+    role: 'Presidente y Fundador',
     image: 'member-1',
   },
   {
     id: 2,
     name: 'Isabella Reyes',
-    role: 'Cultural Director',
+    role: 'Directora Cultural',
     image: 'member-2',
   },
   {
     id: 3,
     name: 'Mateo Castillo',
-    role: 'Treasurer',
+    role: 'Tesorero',
     image: 'member-5',
   },
   {
     id: 4,
     name: 'Sofia Moreno',
-    role: 'Events Coordinator',
+    role: 'Coordinadora de Eventos',
     image: 'member-4',
   },
   {
     id: 5,
     name: 'Javier Gomez',
-    role: 'Music Program Head',
+    role: 'Jefe del Programa de Música',
     image: 'member-3',
   },
   {
     id: 6,
     name: 'Elena Torres',
-    role: 'Dance Instructor',
+    role: 'Instructora de Baile',
     image: 'member-6',
   },
 ];

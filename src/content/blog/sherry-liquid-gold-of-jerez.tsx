@@ -2,10 +2,10 @@ import type { PostMeta } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 
 export const meta: PostMeta = {
-  title: 'Sherry: The Liquid Gold of Jerez',
-  description: 'Uncork the history of Sherry, the unique fortified wine from the sun-drenched vineyards of Andalusia\'s "Sherry Triangle".',
+  title: 'Jerez: El Oro Líquido de Andalucía',
+  description: 'Descorcha la historia del Jerez, el vino fortificado único de los soleados viñedos del "Triángulo del Jerez" en Andalucía.',
   author: 'Carlos Fernandez',
-  date: 'July 20, 2024',
+  date: '20 de julio de 2024',
   image: 'blog-sherry-wine',
 };
 
@@ -13,35 +13,35 @@ export default function PostContent() {
   return (
     <div className="prose prose-lg dark:prose-invert max-w-none mx-auto text-foreground/90">
       <p className="lead text-xl">
-        In the corner of southwestern Andalusia lies a region known as the "Sherry Triangle," defined by the towns of Jerez de la Frontera, Sanlúcar de Barrameda, and El Puerto de Santa María. This is the one place on Earth that can produce the unique and complex fortified wine known as Sherry.
+        En un rincón del suroeste de Andalucía se encuentra una región conocida como el "Triángulo del Jerez", delimitada por las localidades de Jerez de la Frontera, Sanlúcar de Barrameda y El Puerto de Santa María. Este es el único lugar en la Tierra que puede producir el vino fortificado único y complejo conocido como Jerez.
       </p>
       
       <p>
-        Sherry's history is as rich and layered as its flavors. Winemaking in the region dates back to the Phoenicians over 3,000 years ago. The wine gained international fame in the Age of Discovery, as its fortified nature made it stable for long sea voyages. It was a favorite of explorers like Magellan and has been immortalized in the works of Shakespeare.
+        La historia del Jerez es tan rica y estratificada como sus sabores. La vinicultura en la región se remonta a los fenicios, hace más de 3.000 años. El vino ganó fama internacional en la Era de los Descubrimientos, ya que su naturaleza fortificada lo hacía estable para largos viajes por mar. Era uno de los favoritos de exploradores como Magallanes y ha sido inmortalizado en las obras de Shakespeare.
       </p>
 
-      <h3 className="!font-headline text-2xl mt-8">The Magic of the Solera System</h3>
+      <h3 className="!font-headline text-2xl mt-8">La Magia del Sistema de Solera</h3>
       <p>
-        What makes Sherry truly unique is its aging process, the "solera y criadera" system. This is a dynamic process of fractional blending, where younger wines are systematically mixed with older wines over many years.
+        Lo que hace verdaderamente único al Jerez es su proceso de envejecimiento, el sistema de "solera y criadera". Este es un proceso dinámico de mezcla fraccionada, donde los vinos más jóvenes se mezclan sistemáticamente con vinos más viejos a lo largo de muchos años.
       </p>
       
       <div className="my-8 p-6 bg-secondary rounded-lg border border-primary/20">
-        <p>The solera system involves stacks of barrels. Wine for bottling is drawn from the bottom (the "solera"), and then the barrels are topped up with wine from the row above (the "criadera"). The top row is then filled with the newest wine. This ensures a consistent, high-quality final product that blends wines of many different ages.</p>
+        <p>El sistema de solera implica pilas de barricas. El vino para embotellar se extrae de la fila inferior (la "solera"), y luego las barricas se rellenan con vino de la fila superior (la "criadera"). La fila superior se llena entonces con el vino más nuevo. Esto asegura un producto final consistente y de alta calidad que mezcla vinos de muchas edades diferentes.</p>
       </div>
 
-      <h3 className="!font-headline text-2xl mt-8">A Spectrum of Styles</h3>
+      <h3 className="!font-headline text-2xl mt-8">Un Espectro de Estilos</h3>
       <p>
-        Sherry is not a single type of wine but a wide spectrum of styles, ranging from bone-dry to lusciously sweet:
+        El Jerez no es un solo tipo de vino, sino un amplio espectro de estilos, que van desde el extremadamente seco hasta el deliciosamente dulce:
       </p>
       <ul className="list-disc pl-5 space-y-2">
-        <li><strong>Fino and Manzanilla:</strong> Pale, dry, and delicate, aged under a layer of yeast called "flor."</li>
-        <li><strong>Amontillado:</strong> Amber-colored and nutty, starting its life as a Fino but then aged oxidatively.</li>
-        <li><strong>Oloroso:</strong> Dark, rich, and full-bodied, aged entirely in the presence of oxygen.</li>
-        <li><strong>Pedro Ximénez (PX):</strong> An intensely sweet dessert wine made from sun-dried grapes.</li>
+        <li><strong>Fino y Manzanilla:</strong> Pálido, seco y delicado, envejecido bajo una capa de levadura llamada "flor".</li>
+        <li><strong>Amontillado:</strong> De color ámbar y con notas a frutos secos, comienza su vida como un Fino pero luego envejece de forma oxidativa.</li>
+        <li><strong>Oloroso:</strong> Oscuro, rico y con cuerpo, envejecido completamente en presencia de oxígeno.</li>
+        <li><strong>Pedro Ximénez (PX):</strong> Un vino de postre intensamente dulce elaborado con uvas pasificadas al sol.</li>
       </ul>
       
       <p>
-        From a crisp aperitif to a complex dessert pairing, there is a Sherry for every occasion. Exploring its diverse world is to taste the sun, soil, and history of Andalusia.
+        Desde un aperitivo fresco hasta un maridaje complejo para el postre, hay un Jerez para cada ocasión. Explorar su diverso mundo es saborear el sol, la tierra y la historia de Andalucía.
       </p>
     </div>
   );

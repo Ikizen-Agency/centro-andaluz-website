@@ -35,10 +35,10 @@ export default async function HomePage() {
             Centro Andaluz de la Habana
           </h1>
           <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto">
-            Preserving and promoting the vibrant spirit of Andalusian culture in the heart of Havana.
+            Preservando y promoviendo el espíritu vibrante de la cultura andaluza en el corazón de La Habana.
           </p>
           <Button asChild size="lg" className="mt-8 bg-primary hover:bg-primary/90 text-primary-foreground">
-            <Link href="/events">Explore Events</Link>
+            <Link href="/events">Explorar Eventos</Link>
           </Button>
         </div>
       </section>
@@ -46,7 +46,7 @@ export default async function HomePage() {
       {/* Upcoming Events */}
       <section id="events" className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Upcoming Events</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Próximos Eventos</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {upcomingEvents.map((event) => {
               const eventImage = PlaceHolderImages.find(p => p.id === event.image);
@@ -80,7 +80,7 @@ export default async function HomePage() {
           </div>
           <div className="text-center mt-12">
             <Button asChild variant="outline">
-              <Link href="/events">View All Events <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Link href="/events">Ver Todos los Eventos <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </div>
         </div>
@@ -103,34 +103,34 @@ export default async function HomePage() {
       {/* Culture Showcase */}
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">The Soul of Andalusia</h2>
-          <p className="text-center text-muted-foreground max-w-3xl mx-auto mb-12">We are dedicated to celebrating the rich tapestry of Andalusian traditions, from the passionate rhythms of flamenco to the exquisite flavors of its cuisine.</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">El Alma de Andalucía</h2>
+          <p className="text-center text-muted-foreground max-w-3xl mx-auto mb-12">Nos dedicamos a celebrar el rico tapiz de las tradiciones andaluzas, desde los ritmos apasionados del flamenco hasta los exquisitos sabores de su cocina.</p>
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div className="p-6">
               <div className="flex items-center justify-center h-20 w-20 rounded-full bg-primary text-primary-foreground mx-auto mb-4">
                 <Music className="h-10 w-10" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Music & Dance</h3>
-              <p className="text-muted-foreground">Experience the passion of Flamenco, Sevillanas, and the classical guitar that echo through our halls.</p>
+              <h3 className="text-xl font-bold mb-2">Música y Baile</h3>
+              <p className="text-muted-foreground">Experimenta la pasión del Flamenco, las Sevillanas y la guitarra clásica que resuenan en nuestros salones.</p>
             </div>
             <div className="p-6">
               <div className="flex items-center justify-center h-20 w-20 rounded-full bg-primary text-primary-foreground mx-auto mb-4">
                 <Utensils className="h-10 w-10" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Cuisine</h3>
-              <p className="text-muted-foreground">Savor the authentic tastes of Andalusia with our culinary workshops and tasting events.</p>
+              <h3 className="text-xl font-bold mb-2">Gastronomía</h3>
+              <p className="text-muted-foreground">Saborea los auténticos sabores de Andalucía con nuestros talleres culinarios y eventos de degustación.</p>
             </div>
             <div className="p-6">
               <div className="flex items-center justify-center h-20 w-20 rounded-full bg-primary text-primary-foreground mx-auto mb-4">
                 <Feather className="h-10 w-10" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Art & Literature</h3>
-              <p className="text-muted-foreground">Explore the rich literary heritage and artistic expressions from the land of poets and painters.</p>
+              <h3 className="text-xl font-bold mb-2">Arte y Literatura</h3>
+              <p className="text-muted-foreground">Explora el rico patrimonio literario y las expresiones artísticas de la tierra de poetas y pintores.</p>
             </div>
           </div>
           <div className="text-center mt-12">
             <Button asChild>
-                <Link href="/culture">Explore Culture <Palette className="ml-2 h-4 w-4" /></Link>
+                <Link href="/culture">Explorar Cultura <Palette className="ml-2 h-4 w-4" /></Link>
             </Button>
           </div>
         </div>
@@ -141,9 +141,9 @@ export default async function HomePage() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Mission in Havana</h2>
-              <p className="text-muted-foreground mb-4">The Centro Andaluz de la Habana is a cultural haven founded by descendants of Andalusian immigrants in Cuba. Our mission is to be a living embassy of Andalusian culture, preserving its rich traditions of music, dance, gastronomy, and art for future generations.</p>
-              <p className="text-muted-foreground mb-6">We serve as a vibrant community hub, fostering a sense of identity and belonging among members while welcoming all who wish to experience the warmth and passion of Southern Spain.</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Nuestra Misión en La Habana</h2>
+              <p className="text-muted-foreground mb-4">El Centro Andaluz de la Habana es un refugio cultural fundado por descendientes de inmigrantes andaluces en Cuba. Nuestra misión es ser una embajada viva de la cultura andaluza, preservando sus ricas tradiciones de música, danza, gastronomía y arte para las futuras generaciones.</p>
+              <p className="text-muted-foreground mb-6">Funcionamos como un vibrante centro comunitario, fomentando un sentido de identidad y pertenencia entre los miembros, mientras damos la bienvenida a todos los que deseen experimentar la calidez y la pasión del sur de España.</p>
             </div>
             <div className="relative h-80 md:h-96 rounded-lg overflow-hidden shadow-lg">
               {aboutImage && (
@@ -163,7 +163,7 @@ export default async function HomePage() {
       {/* Blog Section */}
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">From Our Blog</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">De Nuestro Blog</h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {latestPosts.map((post) => {
               const postImage = PlaceHolderImages.find(p => p.id === post.image);
@@ -184,7 +184,7 @@ export default async function HomePage() {
                       <CardTitle className="!font-headline text-xl">{post.title}</CardTitle>
                     </CardHeader>
                     <CardContent className="flex-grow">
-                      <p className="text-muted-foreground text-sm mb-2">By {post.author} on {post.date}</p>
+                      <p className="text-muted-foreground text-sm mb-2">Por {post.author} el {post.date}</p>
                       <p className="text-muted-foreground line-clamp-3">{post.description}</p>
                     </CardContent>
                   </Link>
@@ -194,7 +194,7 @@ export default async function HomePage() {
           </div>
            <div className="text-center mt-12">
             <Button asChild variant="outline">
-              <Link href="/blog">Read More Articles <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Link href="/blog">Leer Más Artículos <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </div>
         </div>
@@ -202,5 +202,3 @@ export default async function HomePage() {
     </div>
   );
 }
-
-    

@@ -2,7 +2,7 @@
 'use client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/componentsui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PenaForm } from "@/components/dashboard/pena-form";
 import { penas } from "@/lib/penas";
@@ -19,14 +19,14 @@ export default function PenasPage() {
                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                         <Button>
-                            <PlusCircle className="mr-2 h-4 w-4" /> Add New Peña
+                            <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nueva Peña
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[625px]">
                         <DialogHeader>
-                            <DialogTitle>Create a New Peña</DialogTitle>
+                            <DialogTitle>Crear una Nueva Peña</DialogTitle>
                             <DialogDescription>
-                                Fill out the form below to add a new peña cultural.
+                                Completa el siguiente formulario para añadir una nueva peña cultural.
                             </DialogDescription>
                         </DialogHeader>
                         <PenaForm />
@@ -35,16 +35,16 @@ export default function PenasPage() {
             </div>
             <Card>
                 <CardHeader>
-                    <CardTitle>Existing Peñas</CardTitle>
-                    <CardDescription>A list of all monthly peñas.</CardDescription>
+                    <CardTitle>Peñas Existentes</CardTitle>
+                    <CardDescription>Una lista de todas las peñas mensuales.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Title</TableHead>
-                                <TableHead>Day</TableHead>
-                                <TableHead>Actions</TableHead>
+                                <TableHead>Título</TableHead>
+                                <TableHead>Día</TableHead>
+                                <TableHead>Acciones</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -53,7 +53,7 @@ export default function PenasPage() {
                                     <TableCell className="font-medium">{pena.title}</TableCell>
                                     <TableCell>{pena.day}</TableCell>
                                     <TableCell>
-                                        <Button variant="outline" size="sm">Edit</Button>
+                                        <Button variant="outline" size="sm">Editar</Button>
                                     </TableCell>
                                 </TableRow>
                             ))}

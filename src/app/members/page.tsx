@@ -6,8 +6,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export const metadata: Metadata = {
-  title: 'Our Community | Centro Andaluz de la Habana',
-  description: 'Meet the dedicated members and leadership team of the Centro Andaluz de la Habana.',
+  title: 'Nuestra Comunidad | Centro Andaluz de la Habana',
+  description: 'Conoce a los dedicados miembros y al equipo de liderazgo del Centro Andaluz de la Habana.',
 };
 
 export default function MembersPage() {
@@ -15,9 +15,9 @@ export default function MembersPage() {
     <div className="bg-background">
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold">Our Community</h1>
+          <h1 className="text-4xl md:text-5xl font-bold">Nuestra Comunidad</h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            The heart of our center is its people. Meet the individuals dedicated to preserving and sharing Andalusian culture.
+            El corazón de nuestro centro es su gente. Conoce a las personas dedicadas a preservar y compartir la cultura andaluza.
           </p>
         </div>
         

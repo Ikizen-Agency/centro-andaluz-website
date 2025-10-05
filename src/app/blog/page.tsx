@@ -7,7 +7,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export const metadata: Metadata = {
   title: 'Blog | Centro Andaluz de la Habana',
-  description: 'Articles and stories about Andalusian culture, history, and our community in Havana.',
+  description: 'Artículos e historias sobre la cultura andaluza, su historia y nuestra comunidad en La Habana.',
 };
 
 export default async function BlogPage() {
@@ -17,9 +17,9 @@ export default async function BlogPage() {
     <div className="bg-background">
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold">From Our Blog</h1>
+          <h1 className="text-4xl md:text-5xl font-bold">De Nuestro Blog</h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Insights, stories, and reflections on the vibrant culture of Andalusia and its home in Havana.
+            Perspectivas, historias y reflexiones sobre la vibrante cultura de Andalucía y su hogar en La Habana.
           </p>
         </div>
         
@@ -42,7 +42,7 @@ export default async function BlogPage() {
                   )}
                   <CardHeader>
                     <CardTitle className="!font-headline text-2xl">{post.title}</CardTitle>
-                    <CardDescription>By {post.author}</CardDescription>
+                    <CardDescription>Por {post.author}</CardDescription>
                   </CardHeader>
                   <CardContent className="flex-grow">
                     <p className="text-muted-foreground line-clamp-3">{post.description}</p>

@@ -7,8 +7,8 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Calendar, MapPin } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Events | Centro Andaluz de la Habana',
-  description: 'Explore upcoming events, workshops, and performances celebrating Andalusian culture in Havana.',
+  title: 'Eventos | Centro Andaluz de la Habana',
+  description: 'Explora los próximos eventos, talleres y presentaciones que celebran la cultura andaluza en La Habana.',
 };
 
 export default function EventsPage() {
@@ -16,9 +16,9 @@ export default function EventsPage() {
     <div className="bg-background">
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold">Upcoming Events</h1>
+          <h1 className="text-4xl md:text-5xl font-bold">Próximos Eventos</h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Join us for a celebration of Andalusian culture. From passionate flamenco nights to culinary workshops, there's something for everyone.
+            Únete a nosotros para una celebración de la cultura andaluza. Desde apasionadas noches de flamenco hasta talleres culinarios, hay algo para todos.
           </p>
         </div>
         

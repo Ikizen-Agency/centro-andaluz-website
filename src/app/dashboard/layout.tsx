@@ -14,10 +14,10 @@ export default function DashboardLayout({
   const pathname = usePathname();
 
   const navLinks = [
-    { href: "/dashboard", label: "Dashboard", icon: Home },
-    { href: "/dashboard/events", label: "Events", icon: Calendar },
+    { href: "/dashboard", label: "Panel", icon: Home },
+    { href: "/dashboard/events", label: "Eventos", icon: Calendar },
     { href: "/dashboard/penas", label: "Peñas", icon: Clapperboard },
-    { href: "/dashboard/articles", label: "Articles", icon: Newspaper },
+    { href: "/dashboard/articles", label: "Artículos", icon: Newspaper },
   ];
 
   return (
@@ -52,7 +52,7 @@ export default function DashboardLayout({
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-6 sticky top-0 bg-background z-10">
           <SidebarTrigger className="md:hidden" />
           <h1 className="flex-1 text-lg font-semibold md:text-2xl capitalize">
-            {pathname.split('/').pop()?.replace('-', ' ') || 'Dashboard'}
+            {pathname.split('/').pop()?.replace('-', ' ') || 'Panel'}
           </h1>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 lg:p-8">

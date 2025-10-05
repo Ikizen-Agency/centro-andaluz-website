@@ -11,64 +11,64 @@ import Autoplay from "embla-carousel-autoplay";
 const cultureTopics = [
   {
     id: 'food',
-    title: 'Gastronomy',
-    description: 'Andalusian cuisine is a rich tapestry of flavors, with iconic dishes like gazpacho, paella, and jamón ibérico. Its culinary traditions are a legacy of the diverse cultures that have called this land home.',
+    title: 'Gastronomía',
+    description: 'La cocina andaluza es un rico tapiz de sabores, con platos icónicos como el gazpacho, la paella y el jamón ibérico. Sus tradiciones culinarias son un legado de las diversas culturas que han llamado a esta tierra su hogar.',
     image: 'culture-food',
     icon: Utensils,
   },
   {
     id: 'art',
-    title: 'Art & Architecture',
-    description: 'From the breathtaking arches of the Mezquita de Córdoba to the passionate art of Flamenco, Andalusia is a masterpiece. Discover the legacy of painters like Velázquez and Picasso.',
+    title: 'Arte y Arquitectura',
+    description: 'Desde los impresionantes arcos de la Mezquita de Córdoba hasta el apasionado arte del Flamenco, Andalucía es una obra maestra. Descubre el legado de pintores como Velázquez y Picasso.',
     image: 'culture-art',
     icon: Palette,
   },
   {
     id: 'sports',
-    title: 'Sports & Leisure',
-    description: 'Beyond football, Andalusia has a rich equestrian tradition, with the Royal Andalusian School of Equestrian Art preserving classic dressage. The region also offers world-class golf and water sports.',
+    title: 'Deportes y Ocio',
+    description: 'Más allá del fútbol, Andalucía tiene una rica tradición ecuestre, con la Real Escuela Andaluza del Arte Ecuestre preservando la doma clásica. La región también ofrece golf y deportes acuáticos de primer nivel.',
     image: 'culture-sports',
     icon: Dumbbell,
   },
   {
     id: 'science',
-    title: 'Science & History',
-    description: 'During the Golden Age, cities like Córdoba were global centers of learning. Andalusian scholars made huge advances in medicine, astronomy, and mathematics, preserving classical knowledge.',
+    title: 'Ciencia e Historia',
+    description: 'Durante la Edad de Oro, ciudades como Córdoba fueron centros mundiales de aprendizaje. Eruditos andaluces hicieron grandes avances en medicina, astronomía y matemáticas, preservando el conocimiento clásico.',
     image: 'culture-science',
     icon: Atom,
   },
   {
     id: 'al-andalus',
     title: 'Al-Andalus',
-    description: 'The heart of Moorish Spain for nearly 800 years, leaving a legacy of stunning architecture like the Alhambra, and profound influences on science, poetry, and music.',
+    description: 'El corazón de la España musulmana durante casi 800 años, dejando un legado de arquitectura impresionante como la Alhambra, y profundas influencias en la ciencia, la poesía y la música.',
     image: 'culture-al-andalus',
     icon: Castle,
   },
   {
     id: 'reconquista',
     title: 'La Reconquista',
-    description: 'The centuries-long period where Christian kingdoms expanded and ultimately unified Spain, concluding with the fall of Granada in 1492, reshaping the cultural landscape.',
+    description: 'El período de siglos en el que los reinos cristianos se expandieron y finalmente unificaron España, concluyendo con la caída de Granada en 1492, rediseñando el paisaje cultural.',
     image: 'culture-reconquista',
     icon: Crown,
   },
   {
     id: 'discovery-age',
-    title: 'Age of Discovery',
-    description: 'Andalusia was the gateway to the New World. Ports like Seville and Cádiz were central hubs for exploration, trade, and the exchange of cultures between continents.',
+    title: 'Era de los Descubrimientos',
+    description: 'Andalucía fue la puerta de entrada al Nuevo Mundo. Puertos como Sevilla y Cádiz fueron centros neurálgicos para la exploración, el comercio y el intercambio de culturas entre continentes.',
     image: 'culture-discovery',
     icon: Anchor,
   },
   {
     id: 'golden-age',
     title: 'Siglo de Oro',
-    description: 'A period of flourishing art and literature. Andalusian cities, especially Seville, were home to master painters like Velázquez and Murillo, defining Spanish Baroque.',
+    description: 'Un período de florecimiento del arte y la literatura. Las ciudades andaluzas, especialmente Sevilla, fueron cuna de maestros pintores como Velázquez y Murillo, definiendo el Barroco español.',
     image: 'culture-golden-age',
     icon: Feather,
   },
   {
     id: 'roman-legacy',
-    title: 'Roman Legacy',
-    description: 'Known as Baetica, Andalusia was a vital Roman province, giving birth to emperors like Trajan. Itálica\'s ruins and Córdoba\'s bridge are testaments to this era.',
+    title: 'Legado Romano',
+    description: 'Conocida como Bética, Andalucía fue una provincia romana vital, cuna de emperadores como Trajano. Las ruinas de Itálica y el puente de Córdoba son testimonios de esta era.',
     image: 'culture-roman-legacy',
     icon: BookOpen,
   }
@@ -83,9 +83,9 @@ export default function CulturePage() {
     <div className="bg-background">
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold">The Soul of Andalusia</h1>
+          <h1 className="text-4xl md:text-5xl font-bold">El Alma de Andalucía</h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-            Journey through the diverse facets of Andalusian culture. A land of history, art, and passion, its influence resonates across the globe.
+            Viaja a través de las diversas facetas de la cultura andaluza. Una tierra de historia, arte y pasión, cuya influencia resuena en todo el mundo.
           </p>
         </div>
 

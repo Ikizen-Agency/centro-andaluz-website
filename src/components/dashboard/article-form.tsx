@@ -19,13 +19,13 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 
 const articleFormSchema = z.object({
-  title: z.string().min(2, "Title must be at least 2 characters."),
-  slug: z.string().min(2, "Slug must be at least 2 characters.").regex(/^[a-z0-9-]+$/, "Slug must be lowercase with dashes."),
-  author: z.string().min(1, "Author is required."),
-  date: z.string().min(1, "Date is required."),
-  image: z.string().min(1, "Image ID is required."),
-  description: z.string().min(10, "Description must be at least 10 characters.").max(160, "Description must be less than 160 characters."),
-  content: z.string().min(50, "Content must be at least 50 characters."),
+  title: z.string().min(2, "El título debe tener al menos 2 caracteres."),
+  slug: z.string().min(2, "El slug debe tener al menos 2 caracteres.").regex(/^[a-z0-9-]+$/, "El slug debe estar en minúsculas y con guiones."),
+  author: z.string().min(1, "El autor es obligatorio."),
+  date: z.string().min(1, "La fecha es obligatoria."),
+  image: z.string().min(1, "El ID de la imagen es obligatorio."),
+  description: z.string().min(10, "La descripción debe tener al menos 10 caracteres.").max(160, "La descripción debe tener menos de 160 caracteres."),
+  content: z.string().min(50, "El contenido debe tener al menos 50 caracteres."),
 })
 
 type ArticleFormValues = z.infer<typeof articleFormSchema>
@@ -48,8 +48,8 @@ export function ArticleForm() {
   function onSubmit(data: ArticleFormValues) {
     console.log(data); // In a real app, you'd send this to a server
     toast({
-      title: "Article Submitted",
-      description: `The new article "${data.title}" has been created (simulation).`,
+      title: "Artículo Enviado",
+      description: `El nuevo artículo "${data.title}" ha sido creado (simulación).`,
     })
     form.reset();
   }
@@ -62,9 +62,9 @@ export function ArticleForm() {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Article Title</FormLabel>
+              <FormLabel>Título del Artículo</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. The Art of Flamenco" {...field} />
+                <Input placeholder="ej. El Arte del Flamenco" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,9 +77,9 @@ export function ArticleForm() {
             <FormItem>
               <FormLabel>Slug</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. the-art-of-flamenco" {...field} />
+                <Input placeholder="ej. el-arte-del-flamenco" {...field} />
               </FormControl>
-              <FormDescription>This will be the file name and URL for the article.</FormDescription>
+              <FormDescription>Este será el nombre del archivo y la URL del artículo.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -90,9 +90,9 @@ export function ArticleForm() {
             name="author"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Author</FormLabel>
+                <FormLabel>Autor</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. Isabella Reyes" {...field} />
+                  <Input placeholder="ej. Isabella Reyes" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -103,9 +103,9 @@ export function ArticleForm() {
             name="date"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Date</FormLabel>
+                <FormLabel>Fecha</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. July 22, 2024" {...field} />
+                  <Input placeholder="ej. 22 de julio de 2024" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -117,11 +117,11 @@ export function ArticleForm() {
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Image ID</FormLabel>
+              <FormLabel>ID de Imagen</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. blog-flamenco" {...field} />
+                <Input placeholder="ej. blog-flamenco" {...field} />
               </FormControl>
-              <FormDescription>The ID of the placeholder image to use for the article.</FormDescription>
+              <FormDescription>El ID de la imagen de marcador de posición a usar para el artículo.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -131,9 +131,9 @@ export function ArticleForm() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Short Description / Snippet</FormLabel>
+              <FormLabel>Descripción Corta / Fragmento</FormLabel>
               <FormControl>
-                <Textarea placeholder="A brief summary for blog list pages." {...field} />
+                <Textarea placeholder="Un breve resumen para las páginas de lista del blog." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -144,16 +144,16 @@ export function ArticleForm() {
           name="content"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Article Content (TSX)</FormLabel>
+              <FormLabel>Contenido Completo del Artículo (TSX)</FormLabel>
               <FormControl>
-                <Textarea placeholder="Write the article content here. You can use TSX syntax." rows={15} {...field} />
+                <Textarea placeholder="Escribe el contenido del artículo aquí. Puedes usar sintaxis TSX." rows={15} {...field} />
               </FormControl>
-              <FormDescription>This content will be rendered inside the blog post page. You can use divs, paragraphs, etc.</FormDescription>
+              <FormDescription>Este contenido se renderizará dentro de la página del post del blog. Puedes usar divs, párrafos, etc.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Create Article</Button>
+        <Button type="submit">Crear Artículo</Button>
       </form>
     </Form>
   )

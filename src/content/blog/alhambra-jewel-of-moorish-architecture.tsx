@@ -2,10 +2,10 @@ import type { PostMeta } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export const meta: PostMeta = {
-  title: 'The Alhambra: A Jewel of Moorish Architecture',
-  description: 'Explore the breathtaking beauty and intricate history of the Alhambra palace in Granada, a masterpiece of Islamic art.',
+  title: 'La Alhambra: Joya de la Arquitectura Morisca',
+  description: 'Explora la impresionante belleza y la intrincada historia del palacio de la Alhambra en Granada, una obra maestra del arte islámico.',
   author: 'Javier Gomez',
-  date: 'August 01, 2024',
+  date: '01 de agosto de 2024',
   image: 'blog-alhambra',
 };
 
@@ -13,33 +13,33 @@ export default function PostContent() {
   return (
     <div className="prose prose-lg dark:prose-invert max-w-none mx-auto text-foreground/90">
       <p className="lead text-xl">
-        Perched atop a hill overlooking the city of Granada, the Alhambra stands as a testament to the brilliance of Moorish art and architecture in Spain. Part fortress, part palace, and part garden, this sprawling complex is a journey into the heart of the Nasrid dynasty.
+        Situada en lo alto de una colina con vistas a la ciudad de Granada, la Alhambra se erige como un testimonio de la brillantez del arte y la arquitectura morisca en España. Parte fortaleza, parte palacio y parte jardín, este extenso complejo es un viaje al corazón de la dinastía nazarí.
       </p>
       
       <p>
-        The name "Alhambra" derives from the Arabic "al-qala'a al-hamra," meaning "the red castle," a reference to the sun-dried tapia bricks of its outer walls. While its origins date back to a 9th-century fortress, the magnificent structures we see today were primarily built by the Nasrid emirs in the 13th and 14th centuries.
+        El nombre "Alhambra" deriva del árabe "al-qala'a al-hamra", que significa "el castillo rojo", en referencia a los ladrillos de tapia secados al sol de sus muros exteriores. Aunque sus orígenes se remontan a una fortaleza del siglo IX, las magníficas estructuras que vemos hoy fueron construidas principalmente por los emires nazaríes en los siglos XIII y XIV.
       </p>
 
-      <h3 className="!font-headline text-2xl mt-8">A Palace of Illusions</h3>
+      <h3 className="!font-headline text-2xl mt-8">Un Palacio de Ilusiones</h3>
       <p>
-        The magic of the Alhambra lies in its details. Seemingly solid walls dissolve into delicate stucco lacework, sunlight filters through intricate geometric patterns, and courtyards are filled with the gentle murmur of fountains. The architects masterfully combined space, light, water, and decoration to create an atmosphere of paradise on Earth.
+        La magia de la Alhambra reside en sus detalles. Muros aparentemente sólidos se disuelven en delicadas celosías de estuco, la luz del sol se filtra a través de intrincados patrones geométricos y los patios se llenan con el suave murmullo de las fuentes. Los arquitectos combinaron magistralmente el espacio, la luz, el agua y la decoración para crear una atmósfera de paraíso en la Tierra.
       </p>
 
       <Card className="my-8 bg-secondary border-primary/20">
         <CardHeader>
-          <CardTitle className="!font-headline text-xl">Key Areas to Visit</CardTitle>
+          <CardTitle className="!font-headline text-xl">Áreas Clave para Visitar</CardTitle>
         </CardHeader>
         <CardContent>
             <ul className="list-disc pl-5 mt-2 space-y-1">
-                <li><strong>The Nasrid Palaces:</strong> The heart of the Alhambra, comprising the Mexuar, the Comares Palace, and the spectacular Palace of the Lions.</li>
-                <li><strong>The Generalife:</strong> The summer palace and country estate of the Nasrid rulers, with stunning gardens and water features.</li>
-                <li><strong>The Alcazaba:</strong> The oldest part of the Alhambra, a military fortress offering panoramic views of Granada.</li>
+                <li><strong>Los Palacios Nazaríes:</strong> El corazón de la Alhambra, que comprende el Mexuar, el Palacio de Comares y el espectacular Palacio de los Leones.</li>
+                <li><strong>El Generalife:</strong> El palacio de verano y finca de recreo de los gobernantes nazaríes, con impresionantes jardines y juegos de agua.</li>
+                <li><strong>La Alcazaba:</strong> La parte más antigua de la Alhambra, una fortaleza militar que ofrece vistas panorámicas de Granada.</li>
             </ul>
         </CardContent>
       </Card>
 
       <p>
-        The use of calligraphy is central to the decoration, with poems and verses from the Quran adorning the walls. The famous Court of the Lions, with its central fountain supported by twelve marble lions, is a masterpiece of sculpture and hydraulic engineering. The Alhambra is more than a palace; it's a storybook written in stone, water, and light.
+        El uso de la caligrafía es fundamental en la decoración, con poemas y versos del Corán adornando las paredes. El famoso Patio de los Leones, con su fuente central sostenida por doce leones de mármol, es una obra maestra de la escultura y la ingeniería hidráulica. La Alhambra es más que un palacio; es un libro de cuentos escrito en piedra, agua y luz.
       </p>
     </div>
   );

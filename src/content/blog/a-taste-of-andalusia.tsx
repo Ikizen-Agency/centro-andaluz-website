@@ -1,10 +1,10 @@
 import type { PostMeta } from '@/lib/types';
 
 export const meta: PostMeta = {
-  title: 'A Taste of Andalusia: The Story of Gazpacho',
-  description: 'Discover the refreshing history of Gazpacho, the iconic cold soup that captures the essence of an Andalusian summer.',
+  title: 'Un Sabor de Andalucía: La Historia del Gazpacho',
+  description: 'Descubre la refrescante historia del Gazpacho, la icónica sopa fría que captura la esencia de un verano andaluz.',
   author: 'Mateo Castillo',
-  date: 'June 15, 2024',
+  date: '15 de junio de 2024',
   image: 'blog-cuisine',
 };
 
@@ -12,34 +12,34 @@ export default function PostContent() {
   return (
     <div className="prose prose-lg dark:prose-invert max-w-none mx-auto text-foreground/90">
       <p className="lead text-xl">
-        When the sun beats down on the fields of Andalusia, there is one dish that provides perfect, refreshing relief: Gazpacho. This vibrant, chilled soup is more than just a culinary delight; it's a taste of history, a symbol of resourcefulness, and the liquid essence of a Spanish summer.
+        Cuando el sol cae a plomo sobre los campos de Andalucía, hay un plato que proporciona un alivio perfecto y refrescante: el Gazpacho. Esta sopa vibrante y fría es más que una delicia culinaria; es un sorbo de historia, un símbolo de ingenio y la esencia líquida de un verano español.
       </p>
       
       <p>
-        The origins of Gazpacho are ancient and humble. Its earliest form was a simple blend of stale bread, olive oil, water, vinegar, and garlic, pounded in a mortar and pestle. Roman soldiers and Andalusian field workers relied on this hearty, hydrating mixture to sustain them through long, hot days. It was a peasant's dish, born from the need to use every last scrap of bread and the bounty of the local olive groves.
+        Los orígenes del Gazpacho son antiguos y humildes. Su forma más temprana era una simple mezcla de pan duro, aceite de oliva, agua, vinagre y ajo, machacados en un mortero. Los soldados romanos y los trabajadores del campo andaluces dependían de esta mezcla sustanciosa e hidratante para sobrevivir a las largas y calurosas jornadas. Era un plato de campesinos, nacido de la necesidad de aprovechar hasta la última miga de pan y la abundancia de los olivares locales.
       </p>
       
-      <h3 className="!font-headline text-2xl mt-8">The Tomato Transformation</h3>
+      <h3 className="!font-headline text-2xl mt-8">La Transformación del Tomate</h3>
       <p>
-        The Gazpacho we know and love today—bright red and bursting with flavor—is a relatively modern invention. Tomatoes and peppers, now central to the recipe, were brought to Spain from the Americas in the 16th century. However, it wasn't until the 19th century that they were commonly incorporated into the soup, transforming it from a simple white broth into the ruby-red icon it is today.
+        El Gazpacho que conocemos y amamos hoy en día, de color rojo brillante y rebosante de sabor, es una invención relativamente moderna. Los tomates y pimientos, ahora centrales en la receta, fueron traídos a España desde las Américas en el siglo XVI. Sin embargo, no fue hasta el siglo XIX que se incorporaron comúnmente a la sopa, transformándola de un simple caldo blanco en el icono rojo rubí que es hoy.
       </p>
 
       <div className="my-8 p-6 bg-secondary rounded-lg border border-primary/20">
-        <h4 className="!font-headline text-xl mt-0">Classic Gazpacho Ingredients</h4>
+        <h4 className="!font-headline text-xl mt-0">Ingredientes Clásicos del Gazpacho</h4>
         <ul className="list-disc pl-5 mt-2 space-y-1">
-          <li>Ripe tomatoes</li>
-          <li>Cucumber</li>
-          <li>Bell pepper (typically green)</li>
-          <li>Onion</li>
-          <li>Garlic</li>
-          <li>Extra virgin olive oil</li>
-          <li>Sherry vinegar</li>
-          <li>Stale bread (for texture)</li>
+          <li>Tomates maduros</li>
+          <li>Pepino</li>
+          <li>Pimiento (generalmente verde)</li>
+          <li>Cebolla</li>
+          <li>Ajo</li>
+          <li>Aceite de oliva virgen extra</li>
+          <li>Vinagre de Jerez</li>
+          <li>Pan duro (para la textura)</li>
         </ul>
       </div>
 
       <p>
-        Today, countless variations exist. Some add watermelon for sweetness, others almonds for a creamy texture (ajo blanco), but the classic Andalusian version remains a testament to the power of simple, fresh ingredients. It's a healthy, delicious, and incredibly versatile dish that tells the story of Andalusia in every spoonful.
+        Hoy en día, existen innumerables variaciones. Algunas añaden sandía para darle dulzura, otras almendras para una textura cremosa (ajo blanco), pero la versión clásica andaluza sigue siendo un testimonio del poder de los ingredientes simples y frescos. Es un plato saludable, delicioso e increíblemente versátil que cuenta la historia de Andalucía en cada cucharada.
       </p>
     </div>
   );

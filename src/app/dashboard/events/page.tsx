@@ -15,18 +15,18 @@ export default function EventsPage() {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Events</h1>
+                <h1 className="text-3xl font-bold">Eventos</h1>
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                         <Button>
-                            <PlusCircle className="mr-2 h-4 w-4" /> Add New Event
+                            <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nuevo Evento
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[625px]">
                         <DialogHeader>
-                            <DialogTitle>Create a New Event</DialogTitle>
+                            <DialogTitle>Crear un Nuevo Evento</DialogTitle>
                             <DialogDescription>
-                                Fill out the form below to add a new event to the website.
+                                Completa el siguiente formulario para añadir un nuevo evento al sitio web.
                             </DialogDescription>
                         </DialogHeader>
                         <EventForm />
@@ -35,17 +35,17 @@ export default function EventsPage() {
             </div>
             <Card>
                 <CardHeader>
-                    <CardTitle>Existing Events</CardTitle>
-                    <CardDescription>A list of all current and upcoming events.</CardDescription>
+                    <CardTitle>Eventos Existentes</CardTitle>
+                    <CardDescription>Una lista de todos los eventos actuales y futuros.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Title</TableHead>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Location</TableHead>
-                                <TableHead>Actions</TableHead>
+                                <TableHead>Título</TableHead>
+                                <TableHead>Fecha</TableHead>
+                                <TableHead>Ubicación</TableHead>
+                                <TableHead>Acciones</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -55,7 +55,7 @@ export default function EventsPage() {
                                     <TableCell>{event.date}</TableCell>
                                     <TableCell>{event.location}</TableCell>
                                     <TableCell>
-                                        <Button variant="outline" size="sm">Edit</Button>
+                                        <Button variant="outline" size="sm">Editar</Button>
                                     </TableCell>
                                 </TableRow>
                             ))}

@@ -15,12 +15,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!post) {
     return {
-      title: 'Post Not Found',
+      title: 'Artículo no Encontrado',
     };
   }
 
   return {
-    title: `${post.title} | Centro Andaluz Blog`,
+    title: `${post.title} | Blog del Centro Andaluz`,
     description: post.description,
   };
 }

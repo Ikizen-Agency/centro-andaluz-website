@@ -10,11 +10,11 @@ import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/events", label: "Events" },
-  { href: "/culture", label: "Culture" },
+  { href: "/", label: "Inicio" },
+  { href: "/events", label: "Eventos" },
+  { href: "/culture", label: "Cultura" },
   { href: "/penas", label: "Peñas" },
-  { href: "/members", label: "Community" },
+  { href: "/members", label: "Comunidad" },
   { href: "/blog", label: "Blog" },
 ];
 
@@ -71,7 +71,7 @@ export default function Header() {
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon">
                   <Menu className="h-6 w-6" />
-                  <span className="sr-only">Open menu</span>
+                  <span className="sr-only">Abrir menú</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-full bg-background">
@@ -82,7 +82,7 @@ export default function Header() {
                      </Link>
                      <Button variant="ghost" size="icon" onClick={closeMobileMenu}>
                         <X className="h-6 w-6" />
-                        <span className="sr-only">Close menu</span>
+                        <span className="sr-only">Cerrar menú</span>
                      </Button>
                   </div>
                   <nav className="flex flex-col space-y-6 text-center">

@@ -19,13 +19,13 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 
 const penaFormSchema = z.object({
-  title: z.string().min(2, "Title must be at least 2 characters."),
-  id: z.string().min(2, "ID must be at least 2 characters.").regex(/^[a-z0-9-]+$/, "ID must be lowercase with dashes."),
-  day: z.string().min(1, "Day is required."),
-  description: z.string().min(10, "Short description must be at least 10 characters.").max(160, "Short description must be less than 160 characters."),
-  longDescription: z.string().min(20, "Long description must be at least 20 characters."),
-  icon: z.string().min(1, "Lucide icon name is required."),
-  image: z.string().min(1, "Image ID is required."),
+  title: z.string().min(2, "El título debe tener al menos 2 caracteres."),
+  id: z.string().min(2, "El ID debe tener al menos 2 caracteres.").regex(/^[a-z0-9-]+$/, "El ID debe estar en minúsculas con guiones."),
+  day: z.string().min(1, "El día es obligatorio."),
+  description: z.string().min(10, "La descripción corta debe tener al menos 10 caracteres.").max(160, "La descripción corta debe tener menos de 160 caracteres."),
+  longDescription: z.string().min(20, "La descripción larga debe tener al menos 20 caracteres."),
+  icon: z.string().min(1, "El nombre del icono de Lucide es obligatorio."),
+  image: z.string().min(1, "El ID de la imagen es obligatorio."),
 })
 
 type PenaFormValues = z.infer<typeof penaFormSchema>
@@ -48,8 +48,8 @@ export function PenaForm() {
   function onSubmit(data: PenaFormValues) {
     console.log(data); // In a real app, you'd send this to a server
     toast({
-      title: "Peña Submitted",
-      description: "The new peña has been created (simulation).",
+      title: "Peña Enviada",
+      description: "La nueva peña ha sido creada (simulación).",
     })
     form.reset();
   }
@@ -62,9 +62,9 @@ export function PenaForm() {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Peña Title</FormLabel>
+              <FormLabel>Título de la Peña</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Peña Flamenca" {...field} />
+                <Input placeholder="ej. Peña Flamenca" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,9 +77,9 @@ export function PenaForm() {
             <FormItem>
               <FormLabel>ID</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. pena-flamenca" {...field} />
+                <Input placeholder="ej. pena-flamenca" {...field} />
               </FormControl>
-              <FormDescription>This is the unique identifier and URL slug.</FormDescription>
+              <FormDescription>Este es el identificador único y el slug para la URL.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -89,9 +89,9 @@ export function PenaForm() {
           name="day"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Day of the Month</FormLabel>
+              <FormLabel>Día del Mes</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Primer viernes de cada mes" {...field} />
+                <Input placeholder="ej. Primer viernes de cada mes" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -102,9 +102,9 @@ export function PenaForm() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Short Description</FormLabel>
+              <FormLabel>Descripción Corta</FormLabel>
               <FormControl>
-                <Textarea placeholder="A brief summary for card views." {...field} />
+                <Textarea placeholder="Un breve resumen para las vistas de tarjeta." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -115,9 +115,9 @@ export function PenaForm() {
           name="longDescription"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Description</FormLabel>
+              <FormLabel>Descripción Completa</FormLabel>
               <FormControl>
-                <Textarea placeholder="The detailed description for the peña page." rows={5} {...field} />
+                <Textarea placeholder="La descripción detallada para la página de la peña." rows={5} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -128,9 +128,9 @@ export function PenaForm() {
           name="icon"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Icon Name</FormLabel>
+              <FormLabel>Nombre del Icono</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Music, BookOpen (from lucide-react)" {...field} />
+                <Input placeholder="ej. Music, BookOpen (de lucide-react)" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -141,16 +141,16 @@ export function PenaForm() {
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Image ID</FormLabel>
+              <FormLabel>ID de Imagen</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. event-flamenco" {...field} />
+                <Input placeholder="ej. event-flamenco" {...field} />
               </FormControl>
-              <FormDescription>The ID of the placeholder image to use.</FormDescription>
+              <FormDescription>El ID de la imagen de marcador de posición a usar.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Create Peña</Button>
+        <Button type="submit">Crear Peña</Button>
       </form>
     </Form>
   )
