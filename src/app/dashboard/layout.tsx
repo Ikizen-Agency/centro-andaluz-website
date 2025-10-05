@@ -1,6 +1,6 @@
 
 'use client';
-import { SidebarProvider, Sidebar, SidebarInset, SidebarHeader, SidebarTrigger, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
+import { SidebarProvider, Sidebar, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Home, Newspaper, Calendar, Clapperboard } from "lucide-react";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
@@ -26,7 +26,7 @@ export default function DashboardLayout({
         <SidebarHeader>
             <div className="p-2 flex items-center justify-center">
                 <Link href="/dashboard" className="flex items-center gap-2">
-                  <Logo textVisible={false} />
+                  <Logo textVisible={false} className="h-8 w-8" />
                 </Link>
             </div>
         </SidebarHeader>
