@@ -22,7 +22,7 @@ export default function DashboardLayout({
 
   return (
     <SidebarProvider defaultOpen={false}>
-      <Sidebar>
+      <Sidebar collapsible="icon">
         <SidebarHeader>
             <div className="p-2 flex items-center justify-center">
                 <Link href="/dashboard" className="flex items-center gap-2">
@@ -52,7 +52,6 @@ export default function DashboardLayout({
       <SidebarInset>
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-6 sticky top-0 bg-background z-10">
           <div className="flex items-center gap-2">
-            <SidebarTrigger />
             <h1 className="flex-1 text-lg font-semibold md:text-2xl capitalize">
                 {pathname.split('/').pop()?.replace('-', ' ') || 'Panel'}
             </h1>
