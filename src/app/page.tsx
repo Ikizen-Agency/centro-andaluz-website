@@ -1,22 +1,30 @@
 
+'use client';
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Calendar, Feather, Utensils, Music, Users, Palette } from "lucide-react";
-import { getEvents } from "@/lib/events";
-import { getPosts } from "@/lib/posts.tsx";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import PenasCarousel from "@/components/penas-carousel";
+import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
+import { collection } from "firebase/firestore";
+import type { Event, Post } from "@/lib/types";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getPosts } from "@/lib/posts.tsx";
 
 const heroImage = PlaceHolderImages.find(p => p.id === "hero");
 const aboutImage = PlaceHolderImages.find(p => p.id === "about");
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export default function HomePage() {
+  const firestore = useFirestore();
 
-export default async function HomePage() {
-  const latestPosts = (await getPosts()).slice(0, 2);
-  const upcomingEvents = (await getEvents()).slice(0, 3);
+  const eventsCollection = useMemoFirebase(() => collection(firestore, "events"), [firestore]);
+  const { data: upcomingEvents, isLoading: isLoadingEvents } = useCollection<Event>(eventsCollection);
+
+  const postsCollection = useMemoFirebase(() => collection(firestore, "blog_posts"), [firestore]);
+  const { data: latestPosts, isLoading: isLoadingPosts } = useCollection<Post>(postsCollection);
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -51,7 +59,10 @@ export default async function HomePage() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Próximos Eventos</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {upcomingEvents.map((event) => {
+            {isLoadingEvents && Array.from({ length: 3 }).map((_, i) => (
+                <Card key={i} className="overflow-hidden shadow-lg"><Skeleton className="h-48 w-full" /><CardHeader><Skeleton className="h-6 w-3/4" /></CardHeader><CardContent><Skeleton className="h-4 w-1/2" /><Skeleton className="h-4 w-full mt-2" /></CardContent></Card>
+            ))}
+            {upcomingEvents?.slice(0, 3).map((event) => {
               const eventImage = PlaceHolderImages.find(p => p.id === event.image);
               return (
                 <Card key={event.slug} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
@@ -168,7 +179,10 @@ export default async function HomePage() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">De Nuestro Blog</h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {latestPosts.map((post) => {
+             {isLoadingPosts && Array.from({ length: 2 }).map((_, i) => (
+                <Card key={i} className="overflow-hidden shadow-lg"><Skeleton className="h-48 w-full" /><CardHeader><Skeleton className="h-6 w-3/4" /></CardHeader><CardContent><Skeleton className="h-4 w-1/2" /><Skeleton className="h-4 w-full mt-2" /></CardContent></Card>
+            ))}
+            {latestPosts?.slice(0, 2).map((post) => {
               const postImage = PlaceHolderImages.find(p => p.id === post.image);
               return (
                 <Card key={post.slug} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">

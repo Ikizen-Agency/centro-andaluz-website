@@ -1,5 +1,5 @@
 import { getPosts } from '@/lib/posts.tsx'
-import { events } from '@/lib/events'
+import { getEvents } from '@/lib/events'
 import { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -18,6 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === '' ? 1.0 : 0.8,
   }));
 
+  const events = await getEvents();
   const eventRoutes = events.map((event) => ({
     url: `${baseUrl}/events/${event.slug}`,
     lastModified: new Date().toISOString(),

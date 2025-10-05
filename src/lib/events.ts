@@ -1,5 +1,7 @@
 
 import type { Event } from './types';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { firestore } from '@/firebase/server';
 
 // This file is kept for type reference but data fetching is now done client-side in the components.
 
@@ -68,9 +70,54 @@ const staticEvents: Event[] = [
 // Functions for getting data from Firestore were moved to be client-side hooks.
 // These static functions can be used for fallback or initial data.
 export async function getEvents(): Promise<Event[]> {
-    return staticEvents;
+    try {
+        const eventsCollection = collection(firestore, 'events');
+        const eventsSnapshot = await getDocs(eventsCollection);
+        const firestoreEvents: Event[] = eventsSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                slug: data.slug,
+                title: data.title,
+                date: data.date,
+                location: data.location,
+                description: data.description,
+                longDescription: data.longDescription,
+                image: data.image,
+                gallery: data.gallery,
+                artists: data.artists
+            };
+        });
+        return firestoreEvents;
+    } catch (error) {
+        console.warn("Could not fetch events from Firestore on the server. Falling back to static data. Error:", error);
+        return staticEvents;
+    }
 }
 
 export async function getEvent(slug: string): Promise<Event | undefined> {
+    try {
+        const eventRef = doc(firestore, 'events', slug);
+        const eventSnap = await getDoc(eventRef);
+
+        if (eventSnap.exists()) {
+            const data = eventSnap.data();
+            return {
+                id: eventSnap.id,
+                slug: data.slug,
+                title: data.title,
+                date: data.date,
+                location: data.location,
+                description: data.description,
+                longDescription: data.longDescription,
+                image: data.image,
+                gallery: data.gallery,
+                artists: data.artists
+            };
+        }
+    } catch (error) {
+         console.warn(`Could not fetch event "${slug}" from Firestore on the server. Falling back to static data. Error:`, error);
+    }
+
     return staticEvents.find((e) => e.slug === slug);
 }

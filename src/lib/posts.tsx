@@ -1,4 +1,5 @@
 
+
 import type { Post, PostMeta } from './types';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { firestore } from '@/firebase/server';
@@ -29,16 +30,16 @@ function createComponentFromContent(content: string) {
 
 export async function getPosts(): Promise<Post[]> {
   // First, get posts from local files
-  const localPosts = await Promise.all(
-    Object.entries(postImports).map(async ([slug, importFn]) => {
+  const localPostsPromises = Object.entries(postImports).map(async ([slug, importFn]) => {
       const { meta, default: component } = await importFn();
       return {
         slug,
         ...meta,
         component,
       };
-    })
-  );
+    });
+
+  const localPosts = await Promise.all(localPostsPromises);
 
   // Then, get posts from Firestore
   try {
@@ -64,7 +65,7 @@ export async function getPosts(): Promise<Post[]> {
     return allPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   } catch (error) {
-    console.error("Error fetching posts from Firestore, falling back to local:", error);
+    console.warn("Error fetching posts from Firestore, falling back to local:", error);
     // Sort local posts by date, newest first
     return localPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }
