@@ -27,6 +27,8 @@ import type { Post } from "@/lib/types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { useFirestore } from "@/firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 const articleFormSchema = z.object({
   title: z.string().min(2, "El título debe tener al menos 2 caracteres."),
@@ -62,6 +64,7 @@ const parseDate = (dateStr: string | Date): Date | undefined => {
 export function ArticleForm({ initialData, onSave, onCancel }: ArticleFormProps) {
   const { toast } = useToast();
   const isEditMode = !!initialData;
+  const firestore = useFirestore();
 
   const form = useForm<ArticleFormValues>({
     resolver: zodResolver(articleFormSchema),
@@ -83,26 +86,43 @@ export function ArticleForm({ initialData, onSave, onCancel }: ArticleFormProps)
         author: initialData.author,
         date: parseDate(initialData.date),
         description: initialData.description,
-        content: "El contenido es un componente React y no se puede editar aquí.",
+        content: initialData.content || "El contenido es un componente React y no se puede editar aquí.",
         image: initialData.image,
       });
     }
   }, [initialData, isEditMode, form]);
 
-  function onSubmit(data: ArticleFormValues) {
-    console.log({
+  async function onSubmit(data: ArticleFormValues) {
+    const docId = isEditMode ? initialData!.id! : data.slug;
+    const postRef = doc(firestore, "blog_posts", docId);
+    
+    const imageUrl = `placeholder-for-${data.slug}`;
+
+    const dataToSave = {
         ...data,
         date: format(data.date, "d 'de' MMMM 'de' yyyy", { locale: es }),
-    }); 
-    toast({
-      title: isEditMode ? "Artículo Actualizado" : "Artículo Creado",
-      description: `El artículo "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'} (simulación).`,
-    })
-    
-    if (onSave) {
-        onSave();
-    } else {
-        form.reset();
+        image: isEditMode && !data.image ? initialData?.image : imageUrl,
+    };
+    // @ts-ignore
+    delete dataToSave.image; 
+
+    try {
+      await setDoc(postRef, dataToSave, { merge: isEditMode });
+      toast({
+        title: isEditMode ? "Artículo Actualizado" : "Artículo Creado",
+        description: `El artículo "${data.title}" ha sido ${isEditMode ? 'actualizado' : 'creado'}.`,
+      })
+      
+      if (onSave) {
+          onSave();
+      }
+    } catch(error) {
+        console.error("Error saving post:", error);
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: "No se pudo guardar el artículo."
+        })
     }
   }
 
@@ -225,11 +245,11 @@ export function ArticleForm({ initialData, onSave, onCancel }: ArticleFormProps)
           name="content"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Contenido Completo del Artículo (TSX)</FormLabel>
+              <FormLabel>Contenido Completo del Artículo (Markdown)</FormLabel>
               <FormControl>
-                <Textarea placeholder="Escribe el contenido del artículo aquí. Puedes usar sintaxis TSX." rows={15} {...field} disabled={isEditMode}/>
+                <Textarea placeholder="Escribe el contenido del artículo aquí. Puedes usar sintaxis Markdown." rows={15} {...field} />
               </FormControl>
-              <FormDescription>Este contenido se renderizará dentro de la página del post del blog. No se puede editar después de la creación.</FormDescription>
+              <FormDescription>Este contenido se renderizará dentro de la página del post del blog.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

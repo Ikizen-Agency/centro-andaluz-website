@@ -1,15 +1,14 @@
 
+'use client';
 import type { Metadata } from 'next';
-import { members } from '@/lib/members';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { User } from 'lucide-react';
-
-export const metadata: Metadata = {
-  title: 'Nuestros Miembros | Centro Andaluz de la Habana',
-  description: 'Conoce a los dedicados miembros y al equipo de liderazgo del Centro Andaluz de la Habana.',
-};
+import { User, Users } from 'lucide-react';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
+import type { Member } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="mb-16">
@@ -33,11 +32,25 @@ const MemberCard = ({ name, role }: { name: string; role: string }) => (
   </Card>
 );
 
+const SkeletonMemberCard = () => (
+    <Card className="text-center p-6 shadow-lg h-full flex flex-col justify-center">
+        <CardContent className="p-0 flex flex-col items-center">
+            <Skeleton className="h-24 w-24 rounded-full mx-auto mb-4" />
+            <Skeleton className="h-6 w-3/4 mx-auto mb-2" />
+            <Skeleton className="h-4 w-1/2 mx-auto" />
+        </CardContent>
+    </Card>
+)
+
 export default function MembersPage() {
-  const juntaDirectiva = members.filter(m => m.category === 'Junta Directiva');
-  const comisiones = members.filter(m => m.category === 'Comisiones');
-  const colaboradores = members.filter(m => m.category === 'Colaboradores');
-  const asociaciones = members.filter(m => m.category === 'Colaboración Asociaciones');
+  const firestore = useFirestore();
+  const membersCollection = useMemoFirebase(() => collection(firestore, 'members'), [firestore]);
+  const { data: members, isLoading } = useCollection<Member>(membersCollection);
+
+  const juntaDirectiva = members?.filter(m => m.category === 'Junta Directiva') || [];
+  const comisiones = members?.filter(m => m.category === 'Comisiones') || [];
+  const colaboradores = members?.filter(m => m.category === 'Colaboradores') || [];
+  const asociaciones = members?.filter(m => m.category === 'Colaboración Asociaciones') || [];
 
   return (
     <div className="bg-background">
@@ -51,6 +64,7 @@ export default function MembersPage() {
         
         <Section title="Junta Directiva">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+            {isLoading && Array.from({length: 8}).map((_, i) => <SkeletonMemberCard key={i} />)}
             {juntaDirectiva.map((member) => (
               <MemberCard key={member.id} name={member.name} role={member.role} />
             ))}
@@ -60,6 +74,7 @@ export default function MembersPage() {
         <Section title="Comisiones">
            <div className="flex justify-center">
             <div className="w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
+                {isLoading && <SkeletonMemberCard />}
                 {comisiones.map((member) => (
                 <MemberCard key={member.id} name={member.name} role={member.role} />
                 ))}
@@ -69,6 +84,7 @@ export default function MembersPage() {
 
         <Section title="Colaboradores">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+            {isLoading && Array.from({length: 4}).map((_, i) => <SkeletonMemberCard key={i} />)}
             {colaboradores.map((member) => (
               <MemberCard key={member.id} name={member.name} role={member.role} />
             ))}
@@ -78,6 +94,7 @@ export default function MembersPage() {
         <section>
              <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 !font-headline text-primary">Colaboración de Asociaciones</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
+                {isLoading && <> <Skeleton className="h-24 w-full" /><Skeleton className="h-24 w-full" /> </>}
                 {asociaciones.map((member) => (
                     <Card key={member.id} className="text-center p-6 shadow-lg">
                         <CardContent className="p-0">

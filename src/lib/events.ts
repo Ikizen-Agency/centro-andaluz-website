@@ -1,8 +1,7 @@
 
 import type { Event } from './types';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
-import { getSdks } from '@/firebase/server';
 
+// This file is kept for type reference but data fetching is now done client-side in the components.
 
 const staticEvents: Event[] = [
   {
@@ -66,38 +65,12 @@ const staticEvents: Event[] = [
   },
 ];
 
-
+// Functions for getting data from Firestore were moved to be client-side hooks.
+// These static functions can be used for fallback or initial data.
 export async function getEvents(): Promise<Event[]> {
-    try {
-        const { firestore } = await getSdks();
-        const eventsCollection = collection(firestore, 'events');
-        const eventsSnapshot = await getDocs(eventsCollection);
-        const firestoreEvents = eventsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, slug: doc.id }) as Event);
-        
-        // In a real app, you might want to merge or prioritize data. For now, we'll return Firestore data if available.
-        if (firestoreEvents.length > 0) {
-            return firestoreEvents.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        }
-        return staticEvents;
-    } catch (error) {
-        console.error("Error fetching events from Firestore, falling back to static data:", error);
-        return staticEvents;
-    }
+    return staticEvents;
 }
 
 export async function getEvent(slug: string): Promise<Event | undefined> {
-     try {
-        const { firestore } = await getSdks();
-        const eventRef = doc(firestore, 'events', slug);
-        const eventSnap = await getDoc(eventRef);
-
-        if (eventSnap.exists()) {
-            return { ...eventSnap.data(), id: eventSnap.id, slug: eventSnap.id } as Event;
-        }
-        // Fallback to static data if not found in Firestore
-        return staticEvents.find((e) => e.slug === slug);
-    } catch (error) {
-        console.error("Error fetching event from Firestore, falling back to static data:", error);
-        return staticEvents.find((e) => e.slug === slug);
-    }
+    return staticEvents.find((e) => e.slug === slug);
 }

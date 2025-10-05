@@ -1,39 +1,46 @@
 
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { ArticleForm } from "@/components/dashboard/article-form";
-import { getPosts } from '@/lib/posts';
 import type { Post } from '@/lib/types';
 import { PlusCircle, Trash2, Pencil } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
+import { collection, deleteDoc, doc } from "firebase/firestore";
 
 export default function ArticlesPage() {
-    const [posts, setPosts] = useState<Post[]>([]);
     const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
     const [isEditFormOpen, setIsEditFormOpen] = useState(false);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
     const { toast } = useToast();
+    const firestore = useFirestore();
 
-    useEffect(() => {
-        async function loadPosts() {
-            const fetchedPosts = await getPosts();
-            setPosts(fetchedPosts);
+    const postsCollection = useMemoFirebase(() => collection(firestore, "blog_posts"), [firestore]);
+    const { data: posts, isLoading } = useCollection<Post>(postsCollection);
+
+
+    const handleDelete = async (slug: string) => {
+        if (!slug) return;
+        try {
+            await deleteDoc(doc(firestore, "blog_posts", slug));
+            toast({
+                title: "Artículo Eliminado",
+                description: "El artículo ha sido eliminado con éxito."
+            });
+        } catch (error) {
+             console.error("Error deleting post:", error);
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "No se pudo eliminar el artículo."
+            });
         }
-        loadPosts();
-    }, []);
-
-    const handleDelete = (slug: string) => {
-        setPosts(posts.filter(p => p.slug !== slug));
-        toast({
-            title: "Artículo Eliminado",
-            description: "El artículo ha sido eliminado con éxito (simulación)."
-        });
     };
     
     const handleEditClick = (post: Post) => {
@@ -49,7 +56,6 @@ export default function ArticlesPage() {
     const handleFormSuccess = () => {
         setIsCreateFormOpen(false);
         setIsEditFormOpen(false);
-        // Here you would typically refetch the data
     };
 
     return (
@@ -91,7 +97,8 @@ export default function ArticlesPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {posts.map((post) => (
+                            {isLoading && <TableRow><TableCell colSpan={4}>Cargando artículos...</TableCell></TableRow>}
+                            {posts && posts.map((post) => (
                                 <TableRow key={post.slug} onClick={() => handleRowClick(post)} className="cursor-pointer">
                                     <TableCell className="font-medium">{post.title}</TableCell>
                                     <TableCell>{post.author}</TableCell>
@@ -115,7 +122,7 @@ export default function ArticlesPage() {
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => handleDelete(post.slug)}>
+                                                    <AlertDialogAction onClick={() => handleDelete(post.id!)}>
                                                         Eliminar
                                                     </AlertDialogAction>
                                                 </AlertDialogFooter>
@@ -151,9 +158,9 @@ export default function ArticlesPage() {
                                     <p className="text-sm text-muted-foreground">{selectedPost.image}</p>
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold">Contenido (Componente)</h3>
-                                    <div className="mt-2 p-4 bg-secondary rounded-md text-sm text-muted-foreground">
-                                       El contenido completo es un componente de React y no se puede mostrar aquí directamente.
+                                    <h3 className="font-semibold">Contenido (Markdown)</h3>
+                                    <div className="mt-2 p-4 bg-secondary rounded-md text-sm text-muted-foreground prose">
+                                       <pre className="whitespace-pre-wrap">{selectedPost.content}</pre>
                                     </div>
                                 </div>
                             </div>

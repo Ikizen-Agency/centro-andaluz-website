@@ -1,21 +1,20 @@
 
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { Metadata } from 'next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getEvents } from '@/lib/events';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Calendar, MapPin } from 'lucide-react';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import type { Event } from '@/lib/types';
+import { collection } from 'firebase/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export const metadata: Metadata = {
-  title: 'Eventos | Centro Andaluz de la Habana',
-  description: 'Explora los próximos eventos, talleres y presentaciones que celebran la cultura andaluza en La Habana.',
-};
 
-export const revalidate = 60; // Revalidate every 60 seconds
-
-export default async function EventsPage() {
-  const events = await getEvents();
+export default function EventsPage() {
+  const firestore = useFirestore();
+  const eventsCollection = useMemoFirebase(() => collection(firestore, "events"), [firestore]);
+  const { data: events, isLoading } = useCollection<Event>(eventsCollection);
   
   return (
     <div className="bg-background">
@@ -28,7 +27,19 @@ export default async function EventsPage() {
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((event) => {
+          {isLoading && Array.from({ length: 3 }).map((_, i) => (
+             <Card key={i} className="overflow-hidden shadow-lg flex flex-col">
+                <Skeleton className="h-48 w-full" />
+                <CardHeader><Skeleton className="h-8 w-3/4" /></CardHeader>
+                <CardContent className="space-y-2">
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-4 w-full mt-2" />
+                   <Skeleton className="h-4 w-5/6" />
+                </CardContent>
+            </Card>
+          ))}
+          {events && events.map((event) => {
             const eventImage = PlaceHolderImages.find(p => p.id === event.image);
             return (
               <Card key={event.slug} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col">

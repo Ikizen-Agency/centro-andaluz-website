@@ -21,7 +21,7 @@ export interface Event {
 }
 
 export interface Member {
-  id: number;
+  id: string;
   name: string;
   role: string;
   category: 'Junta Directiva' | 'Comisiones' | 'Colaboradores' | 'Colaboración Asociaciones';
@@ -35,12 +35,12 @@ export interface Post {
   author: string;
   date: string;
   image: string;
-  component: ComponentType;
+  component?: ComponentType;
   content?: string; // Add content field for Firestore
   // This is a simplified representation. In a real MDX setup, this would be the compiled component.
 }
 
-export interface PostMeta extends Omit<Post, 'slug' | 'component' | 'id'> {}
+export interface PostMeta extends Omit<Post, 'slug' | 'component' | 'id' | 'content'> {}
 
 
 export interface Pena {
