@@ -1,0 +1,184 @@
+{
+  "entities": {
+    "Event": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Event",
+      "type": "object",
+      "description": "Represents an event organized by the Centro Andaluz de la Habana.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the event."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the event."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the event."
+        },
+        "date": {
+          "type": "string",
+          "description": "The date and time of the event.",
+          "format": "date-time"
+        },
+        "location": {
+          "type": "string",
+          "description": "The location where the event will be held."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the image associated with the event.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "date",
+        "location",
+        "imageUrl"
+      ]
+    },
+    "Member": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Member",
+      "type": "object",
+      "description": "Represents a member of the Centro Andaluz de la Habana.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the member."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the member."
+        },
+        "role": {
+          "type": "string",
+          "description": "The role of the member within the center."
+        },
+        "photoUrl": {
+          "type": "string",
+          "description": "URL of the member's photo.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "role",
+        "photoUrl"
+      ]
+    },
+    "BlogPost": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "BlogPost",
+      "type": "object",
+      "description": "Represents a blog post about Andalusian culture.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the blog post."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the blog post."
+        },
+        "content": {
+          "type": "string",
+          "description": "The content of the blog post (MDX format)."
+        },
+        "author": {
+          "type": "string",
+          "description": "The author of the blog post."
+        },
+        "publicationDate": {
+          "type": "string",
+          "description": "The date when the blog post was published.",
+          "format": "date-time"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Tags associated with the blog post.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the image associated with the blog post.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "content",
+        "author",
+        "publicationDate"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/events/{eventId}",
+        "definition": {
+          "entityName": "Event",
+          "schema": {
+            "$ref": "#/backend/entities/Event"
+          },
+          "description": "Stores event data. Events are publicly accessible.",
+          "params": [
+            {
+              "name": "eventId",
+              "description": "The unique identifier for the event."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/members/{memberId}",
+        "definition": {
+          "entityName": "Member",
+          "schema": {
+            "$ref": "#/backend/entities/Member"
+          },
+          "description": "Stores member data. Members are publicly accessible.",
+          "params": [
+            {
+              "name": "memberId",
+              "description": "The unique identifier for the member."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/blog_posts/{blogPostId}",
+        "definition": {
+          "entityName": "BlogPost",
+          "schema": {
+            "$ref": "#/backend/entities/BlogPost"
+          },
+          "description": "Stores blog post data. Blog posts are publicly accessible.",
+          "params": [
+            {
+              "name": "blogPostId",
+              "description": "The unique identifier for the blog post."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to support the Centro Andaluz de la Habana's website features, focusing on events, members, and blog posts. It emphasizes security, scalability, and debuggability by adhering to the principles of Authorization Independence, Structural Segregation, Access Modeling, and Data Clarity.\n\n**Authorization Independence:** Authorization independence is achieved by avoiding `get()` calls in security rules. Path-based ownership is implemented for events, blog posts, and member data.\n\n**Structural Segregation:** Different data types with different access requirements are stored in separate collections. This simplifies security rules by ensuring all documents within a collection share the same security posture.\n\n**Access Modeling:**\n\n*   **Events:** Publicly accessible, thus stored directly in the `events` collection.\n*   **Members:** Publicly accessible, thus stored directly in the `members` collection.\n*   **Blog Posts:** Publicly accessible, thus stored directly in the `blog_posts` collection.\n\n**QAPs (Rules are not Filters):** Segregation of data into separate collections based on access requirements ensures secure list operations without the need for complex filtering in security rules. All documents in a collection share the same security requirements, which simplifies list operations.\n\n**DBAC (No Custom Claims):** The application relies solely on `request.auth.uid` for authentication.\n\n**Invariants:** The structure supports the integrity of data by enforcing a consistent schema for each entity (Event, Member, BlogPost)."
+  }
+}
