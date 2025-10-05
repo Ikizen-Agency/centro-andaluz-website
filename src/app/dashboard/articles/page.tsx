@@ -32,7 +32,7 @@ export default function ArticlesPage() {
                             <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nuevo Artículo
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[625px]">
+                    <DialogContent className="sm:max-w-4xl">
                         <DialogHeader>
                             <DialogTitle>Crear un Nuevo Artículo de Blog</DialogTitle>
                             <DialogDescription>

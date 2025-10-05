@@ -25,7 +25,7 @@ const eventFormSchema = z.object({
   location: z.string().min(1, "La ubicación es obligatoria."),
   description: z.string().min(10, "La descripción corta debe tener al menos 10 caracteres.").max(160, "La descripción corta debe tener menos de 160 caracteres."),
   longDescription: z.string().min(20, "La descripción larga debe tener al menos 20 caracteres."),
-  image: z.string().min(1, "El ID de la imagen es obligatorio."),
+  image: z.any(),
 })
 
 type EventFormValues = z.infer<typeof eventFormSchema>
@@ -141,11 +141,11 @@ export function EventForm() {
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ID de Imagen</FormLabel>
+              <FormLabel>Imagen del Evento</FormLabel>
               <FormControl>
-                <Input placeholder="ej. event-flamenco" {...field} />
+                 <Input type="file" {...form.register("image")} />
               </FormControl>
-               <FormDescription>El ID de la imagen de marcador de posición a usar.</FormDescription>
+               <FormDescription>Sube la imagen principal para el evento.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

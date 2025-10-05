@@ -23,7 +23,7 @@ const articleFormSchema = z.object({
   slug: z.string().min(2, "El slug debe tener al menos 2 caracteres.").regex(/^[a-z0-9-]+$/, "El slug debe estar en minúsculas y con guiones."),
   author: z.string().min(1, "El autor es obligatorio."),
   date: z.string().min(1, "La fecha es obligatoria."),
-  image: z.string().min(1, "El ID de la imagen es obligatorio."),
+  image: z.any(),
   description: z.string().min(10, "La descripción debe tener al menos 10 caracteres.").max(160, "La descripción debe tener menos de 160 caracteres."),
   content: z.string().min(50, "El contenido debe tener al menos 50 caracteres."),
 })
@@ -117,11 +117,11 @@ export function ArticleForm() {
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ID de Imagen</FormLabel>
+              <FormLabel>Imagen del Artículo</FormLabel>
               <FormControl>
-                <Input placeholder="ej. blog-flamenco" {...field} />
+                <Input type="file" {...form.register("image")} />
               </FormControl>
-              <FormDescription>El ID de la imagen de marcador de posición a usar para el artículo.</FormDescription>
+              <FormDescription>Sube la imagen principal para el artículo.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

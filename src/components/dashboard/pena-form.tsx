@@ -25,7 +25,7 @@ const penaFormSchema = z.object({
   description: z.string().min(10, "La descripción corta debe tener al menos 10 caracteres.").max(160, "La descripción corta debe tener menos de 160 caracteres."),
   longDescription: z.string().min(20, "La descripción larga debe tener al menos 20 caracteres."),
   icon: z.string().min(1, "El nombre del icono de Lucide es obligatorio."),
-  image: z.string().min(1, "El ID de la imagen es obligatorio."),
+  image: z.any(),
 })
 
 type PenaFormValues = z.infer<typeof penaFormSchema>
@@ -141,11 +141,11 @@ export function PenaForm() {
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ID de Imagen</FormLabel>
+              <FormLabel>Imagen de la Peña</FormLabel>
               <FormControl>
-                <Input placeholder="ej. event-flamenco" {...field} />
+                <Input type="file" {...form.register("image")} />
               </FormControl>
-              <FormDescription>El ID de la imagen de marcador de posición a usar.</FormDescription>
+              <FormDescription>Sube la imagen principal para la peña.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
