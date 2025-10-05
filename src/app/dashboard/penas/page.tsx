@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { PenaForm } from "@/components/dashboard/pena-form";
 import { penas as initialPenas } from "@/lib/penas";
-import { PlusCircle, Trash2 } from 'lucide-react';
+import { PlusCircle, Trash2, Pencil } from 'lucide-react';
 import { useState } from "react";
 import type { Pena } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
@@ -75,7 +75,9 @@ export default function PenasPage() {
                                     <TableCell className="font-medium">{pena.title}</TableCell>
                                     <TableCell>{pena.day}</TableCell>
                                     <TableCell className="text-right space-x-2" onClick={(e) => e.stopPropagation()}>
-                                        <Button variant="outline" size="sm">Editar</Button>
+                                        <Button variant="outline" size="sm">
+                                            <Pencil className="h-4 w-4" />
+                                        </Button>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
                                                 <Button variant="destructive" size="sm">

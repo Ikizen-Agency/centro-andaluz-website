@@ -9,7 +9,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { ArticleForm } from "@/components/dashboard/article-form";
 import { getPosts } from '@/lib/posts';
 import type { Post } from '@/lib/types';
-import { PlusCircle, Trash2 } from 'lucide-react';
+import { PlusCircle, Trash2, Pencil } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function ArticlesPage() {
@@ -87,7 +87,9 @@ export default function ArticlesPage() {
                                     <TableCell>{post.author}</TableCell>
                                     <TableCell>{post.date}</TableCell>
                                     <TableCell className="text-right space-x-2" onClick={(e) => e.stopPropagation()}>
-                                        <Button variant="outline" size="sm">Editar</Button>
+                                        <Button variant="outline" size="sm">
+                                            <Pencil className="h-4 w-4" />
+                                        </Button>
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
                                                 <Button variant="destructive" size="sm">
