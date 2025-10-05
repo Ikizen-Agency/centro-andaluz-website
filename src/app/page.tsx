@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,7 @@ export default async function HomePage() {
             src={heroImage.imageUrl}
             alt={heroImage.description}
             fill
-            className="object-cover"
+            className="object-cover object-top"
             priority
             data-ai-hint={heroImage.imageHint}
           />
