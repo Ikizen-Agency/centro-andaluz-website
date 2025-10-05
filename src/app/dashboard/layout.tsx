@@ -24,7 +24,7 @@ export default function DashboardLayout({
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-            <div className="p-2 flex justify-between items-center">
+            <div className="p-2 flex items-center justify-between">
                 <Link href="/dashboard" className="flex items-center gap-2">
                   <Logo />
                 </Link>
@@ -42,7 +42,7 @@ export default function DashboardLayout({
                         >
                           <Link href={link.href}>
                             <link.icon />
-                            {link.label}
+                            <span>{link.label}</span>
                           </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -52,10 +52,12 @@ export default function DashboardLayout({
       </Sidebar>
       <SidebarInset>
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-6 sticky top-0 bg-background z-10">
-          <SidebarTrigger className="md:hidden" />
-          <h1 className="flex-1 text-lg font-semibold md:text-2xl capitalize">
-            {pathname.split('/').pop()?.replace('-', ' ') || 'Panel'}
-          </h1>
+          <div className="flex items-center gap-2">
+            <SidebarTrigger className="md:hidden" />
+            <h1 className="flex-1 text-lg font-semibold md:text-2xl capitalize">
+                {pathname.split('/').pop()?.replace('-', ' ') || 'Panel'}
+            </h1>
+          </div>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 lg:p-8">
             {children}
