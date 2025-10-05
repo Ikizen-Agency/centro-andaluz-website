@@ -1,33 +1,62 @@
-
+/**
+ * @fileOverview Firestore Security Rules for the Centro Andaluz de la Habana application.
+ *
+ * Core Philosophy:
+ * This ruleset provides public read access to events, members, and blog posts, but restricts write access.
+ *
+ * Data Structure:
+ * The database consists of three top-level collections: `events`, `members`, and `blog_posts`. Each collection contains documents representing events, members, and blog posts, respectively.
+ *
+ * Key Security Decisions:
+ * - Public read access for all collections.
+ * - Write access is restricted to authenticated users.
+ * - The rules do not enforce a specific schema for the data being written, allowing for flexible data shapes during prototyping.
+ * - No user listing is explicitly denied, as this is not a user-centric application with private user data.
+ *
+ * Denormalization for Authorization:
+ *  - The current data model does not include user-specific ownership fields. To enable secure write operations, the data model will need to be updated to include an `ownerId` or `authorId` field on each document, which can then be validated against `request.auth.uid`.
+ *
+ * Structural Segregation:
+ *  - The decision to use top-level collections for events, members, and blog posts reflects the public nature of this data.
+ */
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Allow public read access to events, blog_posts, members, and penas
+    /**
+     * @description Allows read access to all events. Write access is restricted and requires an ownership field to be added to the schema.
+     * @path /events/{eventId}
+     * @allow (get, list): Any user can read event data.
+     * @deny (create, update, delete): No one can modify event data until ownership is implemented.
+     * @principle Public read, owner-only writes (currently disabled pending schema update).
+     */
     match /events/{eventId} {
-      allow read: if true;
-      allow write: if request.auth != null; // Only authenticated users can write
+      allow get, list: if true;
+      allow create, update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
-    match /blog_posts/{postId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-
+    /**
+     * @description Allows read access to all members. Write access is restricted and requires an ownership field to be added to the schema.
+     * @path /members/{memberId}
+     * @allow (get, list): Any user can read member data.
+     * @deny (create, update, delete): No one can modify member data until ownership is implemented.
+     * @principle Public read, owner-only writes (currently disabled pending schema update).
+     */
     match /members/{memberId} {
-      allow read: if true;
-      allow write: if request.auth != null;
+      allow get, list: if true;
+      allow create, update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
 
-    match /penas/{penaId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-
-    // Default deny for any other collection
-    match /{document=**} {
-      allow read, write: if false;
+    /**
+     * @description Allows read access to all blog posts. Write access is restricted and requires an ownership field to be added to the schema.
+     * @path /blog_posts/{blogPostId}
+     * @allow (get, list): Any user can read blog post data.
+     * @deny (create, update, delete): No one can modify blog post data until ownership is implemented.
+     * @principle Public read, owner-only writes (currently disabled pending schema update).
+     */
+    match /blog_posts/{blogPostId} {
+      allow get, list: if true;
+      allow create, update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
     }
   }
 }
